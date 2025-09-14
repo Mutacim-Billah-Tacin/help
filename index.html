@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete HTML Form Elements Showcase</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the dark mode toggle */
+        :root {
+            color-scheme: light;
+        }
+        .dark-mode-toggle:checked ~ .moon-icon {
+            display: block;
+        }
+        .dark-mode-toggle:checked ~ .sun-icon {
+            display: none;
+        }
+        .sun-icon {
+            display: block;
+        }
+        .moon-icon {
+            display: none;
+        }
+        /* Custom styles for range input thumb */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 1rem;
+            height: 1rem;
+            background-color: #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-top: -6px; /* Center thumb vertically */
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 1rem;
+            height: 1rem;
+            background-color: #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300 font-sans">
+    <div class="container mx-auto p-4 sm:p-8 flex items-center justify-center min-h-screen">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 sm:p-10 w-full max-w-2xl transition-all duration-300">
+            <!-- Dark mode toggle -->
+            <div class="flex justify-end mb-4">
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" value="" class="sr-only peer dark-mode-toggle">
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-gray-300 dark:peer-focus:ring-gray-700 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gray-600"></div>
+                    <!-- Sun and Moon Icons -->
+                    <svg class="sun-icon w-6 h-6 ml-3 text-gray-500 transition-colors duration-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 9a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zm-2 5a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm-6-3a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.318 6.682a1 1 0 011.414 0L7.414 7.586A1 1 0 016.707 8.293L5.293 6.88A1 1 0 015.318 6.682zM15.414 12.586a1 1 0 01-1.414 1.414l-1.414-1.414a1 1 0 011.414-1.414l1.414 1.414zM12.586 5.293a1 1 0 011.414-1.414l1.414 1.414a1 1 0 11-1.414 1.414l-1.414-1.414zM6.88 15.293a1 1 0 01-1.414 1.414L4.05 15.414a1 1 0 011.414-1.414l1.414 1.414zM10 18a8 8 0 100-16 8 8 0 000 16z"></path></svg>
+                    <svg class="moon-icon w-6 h-6 ml-3 text-gray-400 transition-colors duration-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8.001 8.001 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                </label>
+            </div>
+
+            <h1 class="text-3xl sm:text-4xl font-bold text-center mb-6">Complete HTML Form Elements Showcase</h1>
+            <p class="text-center text-sm sm:text-base text-gray-500 dark:text-gray-400 mb-8">A comprehensive collection of common HTML form elements for your reference.</p>
+            
+            <form action="#" method="post" class="space-y-6">
+
+                <!-- Basic Text Input -->
+                <div class="space-y-2">
+                    <label for="username" class="block text-sm font-medium">Text Input (Username)</label>
+                    <input type="text" id="username" name="username" placeholder="e.g., JohnDoe123" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700">
+                </div>
+
+                <!-- Search Input -->
+                <div class="space-y-2">
+                    <label for="search" class="block text-sm font-medium">Search</label>
+                    <input type="search" id="search" name="search" placeholder="Search for something..." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700">
+                </div>
+                
+                <!-- Password Input -->
+                <div class="space-y-2">
+                    <label for="password" class="block text-sm font-medium">Password</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700">
+                </div>
+                
+                <!-- Email Input -->
+                <div class="space-y-2">
+                    <label for="email" class="block text-sm font-medium">Email</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700">
+                </div>
+                
+                <!-- Number Input -->
+                <div class="space-y-2">
+                    <label for="age" class="block text-sm font-medium">Number</label>
+                    <input type="number" id="age" name="age" min="1" max="120" placeholder="e.g., 30" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700">
+                </div>
+
+                <!-- Hidden Input -->
+                <input type="hidden" name="user_id" value="12345">
+                
+                <!-- Date and Time Inputs -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label for="birthdate" class="block text-sm font-medium">Date</label>
+                        <input type="date" id="birthdate" name="birthdate" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700">
+                    </div>
+                    <div class="space-y-2">
+                        <label for="appointment_time" class="block text-sm font-medium">Time</label>
+                        <input type="time" id="appointment_time" name="appointment_time" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700">
+                    </div>
+                    <div class="space-y-2">
+                        <label for="week" class="block text-sm font-medium">Week</label>
+                        <input type="week" id="week" name="week" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700">
+                    </div>
+                    <div class="space-y-2">
+                        <label for="month" class="block text-sm font-medium">Month</label>
+                        <input type="month" id="month" name="month" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700">
+                    </div>
+                </div>
+
+                <!-- Range Input (Slider) -->
+                <div class="space-y-2">
+                    <label for="satisfaction" class="block text-sm font-medium">Range (1-10)</label>
+                    <input type="range" id="satisfaction" name="satisfaction" min="1" max="10" value="5" class="w-full h-2 rounded-lg appearance-none cursor-pointer bg-gray-200 dark:bg-gray-700 [&::-webkit-slider-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:shadow-lg [&::-moz-range-thumb]:bg-blue-500 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full">
+                </div>
+
+                <!-- Color Input -->
+                <div class="space-y-2">
+                    <label for="favorite_color" class="block text-sm font-medium">Color</label>
+                    <input type="color" id="favorite_color" name="favorite_color" value="#0057ff" class="w-full h-10 border-0 rounded-lg cursor-pointer bg-transparent">
+                </div>
+
+                <!-- Checkboxes -->
+                <div class="space-y-2">
+                    <span class="block text-sm font-medium mb-2">Check all that apply:</span>
+                    <div class="flex flex-col space-y-2">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="interest" value="coding" class="rounded text-blue-500 border-gray-300 dark:border-gray-600 focus:ring-blue-500 bg-white dark:bg-gray-700">
+                            <span class="ml-2 text-sm">Coding</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="interest" value="gaming" class="rounded text-blue-500 border-gray-300 dark:border-gray-600 focus:ring-blue-500 bg-white dark:bg-gray-700">
+                            <span class="ml-2 text-sm">Gaming</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="interest" value="reading" class="rounded text-blue-500 border-gray-300 dark:border-gray-600 focus:ring-blue-500 bg-white dark:bg-gray-700">
+                            <span class="ml-2 text-sm">Reading</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Radio Buttons -->
+                <div class="space-y-2">
+                    <span class="block text-sm font-medium mb-2">Preferred Contact Method:</span>
+                    <div class="flex space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="contact" value="email" class="text-blue-500 border-gray-300 dark:border-gray-600 focus:ring-blue-500 bg-white dark:bg-gray-700">
+                            <span class="ml-2 text-sm">Email</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="contact" value="phone" class="text-blue-500 border-gray-300 dark:border-gray-600 focus:ring-blue-500 bg-white dark:bg-gray-700">
+                            <span class="ml-2 text-sm">Phone</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="contact" value="mail" class="text-blue-500 border-gray-300 dark:border-gray-600 focus:ring-blue-500 bg-white dark:bg-gray-700">
+                            <span class="ml-2 text-sm">Mail</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Textarea -->
+                <div class="space-y-2">
+                    <label for="comments" class="block text-sm font-medium">Textarea (Comments)</label>
+                    <textarea id="comments" name="comments" rows="4" placeholder="Enter your comments here..." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700"></textarea>
+                </div>
+
+                <!-- Select Dropdown -->
+                <div class="space-y-2">
+                    <label for="country" class="block text-sm font-medium">Select</label>
+                    <select id="country" name="country" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700">
+                        <option value="">-- Please select --</option>
+                        <option value="usa">United States</option>
+                        <option value="canada">Canada</option>
+                        <option value="uk">United Kingdom</option>
+                    </select>
+                </div>
+                
+                <!-- Datalist (Autosuggest) -->
+                <div class="space-y-2">
+                    <label for="browser" class="block text-sm font-medium">Datalist (Choose a Browser)</label>
+                    <input list="browsers" id="browser" name="browser" placeholder="e.g., Chrome" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700">
+                    <datalist id="browsers">
+                        <option value="Chrome">
+                        <option value="Firefox">
+                        <option value="Safari">
+                        <option value="Edge">
+                    </datalist>
+                </div>
+
+                <!-- File Input -->
+                <div class="space-y-2">
+                    <label for="file_upload" class="block text-sm font-medium">File Upload</label>
+                    <input type="file" id="file_upload" name="file_upload" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition duration-300 cursor-pointer">
+                </div>
+
+                <!-- URL and Tel Inputs -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label for="website" class="block text-sm font-medium">URL</label>
+                        <input type="url" id="website" name="website" placeholder="https://example.com" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700">
+                    </div>
+                    <div class="space-y-2">
+                        <label for="phone_number" class="block text-sm font-medium">Telephone</label>
+                        <input type="tel" id="phone_number" name="phone_number" placeholder="123-456-7890" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700">
+                    </div>
+                </div>
+
+                <!-- Fieldset for Location -->
+                <fieldset class="border border-gray-300 dark:border-gray-600 rounded-lg p-4 space-y-4">
+                    <legend class="px-2 text-sm font-medium">Location (No Native Map Element)</legend>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label for="latitude" class="block text-sm font-medium">Latitude</label>
+                            <input type="text" id="latitude" name="latitude" placeholder="e.g., 34.0522" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700">
+                        </div>
+                        <div class="space-y-2">
+                            <label for="longitude" class="block text-sm font-medium">Longitude</label>
+                            <input type="text" id="longitude" name="longitude" placeholder="e.g., -118.2437" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Output, Progress, and Meter Elements -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <span class="block text-sm font-medium">Output (Calculation)</span>
+                        <div class="flex items-center space-x-2">
+                            <input type="number" id="num1" value="5" class="w-20 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700">
+                            <span class="text-xl">+</span>
+                            <input type="number" id="num2" value="3" class="w-20 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-700">
+                            <span class="text-xl">=</span>
+                            <output name="result" for="num1 num2" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg font-bold min-w-16 text-center dark:bg-gray-700"></output>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <span class="block text-sm font-medium">Progress Bar</span>
+                        <progress id="file_progress" value="75" max="100" class="w-full h-4 rounded-lg overflow-hidden [&::-webkit-progress-bar]:bg-gray-300 [&::-webkit-progress-value]:bg-blue-500 [&::-moz-progress-bar]:bg-blue-500"></progress>
+                    </div>
+                    <div class="space-y-2">
+                        <span class="block text-sm font-medium">Meter (disk usage)</span>
+                        <meter id="disk_usage" value="0.7" min="0" max="1" low="0.4" high="0.8" optimum="0.2" class="w-full h-4 rounded-lg overflow-hidden [&::-webkit-meter-bar]:bg-gray-300 [&::-webkit-meter-optimum-value]:bg-green-500 [&::-webkit-meter-suboptimum-value]:bg-yellow-500 [&::-webkit-meter-even-less-good-value]:bg-red-500 [&::-moz-meter-bar]:bg-gray-300 [&::-moz-meter-optimum-value]:bg-green-500 [&::-moz-meter-suboptimum-value]:bg-yellow-500 [&::-moz-meter-even-less-good-value]:bg-red-500"></meter>
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-8">
+                    <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Submit
+                    </button>
+                    <button type="reset" class="w-full sm:w-auto px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-bold hover:bg-gray-300 transition duration-300 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">
+                        Reset
+                    </button>
+                    <input type="submit" value="Input Submit" class="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <script>
+        // JavaScript to handle the dark mode toggle
+        const toggle = document.querySelector('.dark-mode-toggle');
+        const body = document.body;
+
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (isDarkMode) {
+            body.classList.add('dark');
+            toggle.checked = true;
+        }
+
+        toggle.addEventListener('change', () => {
+            if (toggle.checked) {
+                body.classList.add('dark');
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                body.classList.remove('dark');
+                localStorage.setItem('darkMode', 'false');
+            }
+        });
+
+        // JavaScript for the output element calculation
+        const num1Input = document.getElementById('num1');
+        const num2Input = document.getElementById('num2');
+        const resultOutput = document.querySelector('output[name="result"]');
+
+        function calculateSum() {
+            const sum = parseFloat(num1Input.value) + parseFloat(num2Input.value);
+            resultOutput.value = isNaN(sum) ? '' : sum;
+        }
+
+        num1Input.addEventListener('input', calculateSum);
+        num2Input.addEventListener('input', calculateSum);
+
+        // Initial calculation
+        calculateSum();
+    </script>
+</body>
+</html>
