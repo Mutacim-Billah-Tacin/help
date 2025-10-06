@@ -1,2 +1,2 @@
 irm https://get.activated.win | iex  
-#active windows in one go#
+<!--active windows in one go-->
