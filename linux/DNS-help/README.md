@@ -34,6 +34,11 @@ This repo is made for *people who actually want to understand how Linux networki
 
 ---
 
+### 💡 Works on all systemd-based and modern init-based Linux systems.  
+*(Gentoo, Alpine, and some minimal BSD-like setups may require different approaches.)*
+
+---
+
 ## ⚡ Quick Verification Commands
 ```bash
 systemctl list-units --type=service | grep -E 'NetworkManager|systemd-resolved|dhcpcd|connman|netplan'
@@ -153,7 +158,7 @@ Edit config:
 sudo nano /etc/netplan/01-network-manager-all.yaml
 ```
 Example:
-```bash
+```yaml
 network:
   version: 2
   renderer: NetworkManager
@@ -197,4 +202,23 @@ sudo chattr -i /etc/resolv.conf
 
 Test whether your DNS is actually being used:
 ```bash
+resolvectl status
 ```
+```bash
+cat /etc/resolv.conf
+```
+```bash
+ping -c 3 google.com
+```
+---
+
+## 🤝 Contributing
+Pull requests are welcome!  
+If you’ve tested a setup on another distro or found a cleaner method — document it, don’t script it. 🧾
+
+## 🪪 License
+This project is licensed under the MIT License — see [LICENSE](./LICENSE) for details.
+
+---
+
+> 🧠 *“If you can’t configure your DNS manually, you don’t control your machine.”*
