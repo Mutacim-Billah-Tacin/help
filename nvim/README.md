@@ -40,4 +40,3 @@ https://www.lazyvim.org/keymaps
     ◍ typescript-language-server ts_ls
     ◍ vtsls
     ◍ yaml-language-server yamlls
-
