@@ -5,6 +5,10 @@ Refer to the [documentation](https://lazyvim.github.io/installation) to get star
 
 ---
 
+install nessesery thing - npm & nodejs
+
+---
+
 # ⌨️ Keymaps
 https://www.lazyvim.org/keymaps
 
