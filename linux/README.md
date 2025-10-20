@@ -13,5 +13,6 @@ I use fish btw
 ```fish
 if status is-interactive
     functions --erase fish_greeting
+    starship init fish | source
 end
 ```
