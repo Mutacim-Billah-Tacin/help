@@ -3,7 +3,7 @@ To update the best mirror list for your location
 sudo pacman -S reflector
 sudo reflector --country Bangladesh --latest 10 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 ```
-## yay setup  
+## AUR setup  
 change the DLAGENTS from /etc/makepkg.conf  
 ```conf
 DLAGENTS=(
