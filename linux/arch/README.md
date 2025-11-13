@@ -14,3 +14,9 @@ DLAGENTS=(
   'scp::/usr/bin/scp -C %u %o'
 )
 ```
+
+## DISK safety test  
+run it on terminal  
+```bash
+sudo systemctl enable --now fstrim.timer
+```
