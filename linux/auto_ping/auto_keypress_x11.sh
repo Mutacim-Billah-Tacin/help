@@ -4,7 +4,7 @@
 STARTUP_DELAY=10                 # Delay before starting (seconds)
 TOTAL_DURATION=$((5 * 60 * 60))  # Total duration
 INTERVAL=1800                    # Base interval between W presses
-RANDOM_VARIATION=2               # Random variation ± seconds
+RANDOM_VARIATION=60               # Random variation ± seconds
 DELAY_BEFORE_ENTER=0.2           # Delay between key and Enter
 # ============================
 
