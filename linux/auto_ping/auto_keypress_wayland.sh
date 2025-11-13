@@ -2,7 +2,7 @@
 
 # NOTE: This script requires ydotool to be installed and running on Wayland (Hyprland).
 # Installation (Arch/Omarchy): sudo pacman -S ydotool
-# Daemon startup: sudo systemctl enable --now ydotool.service
+# Daemon startup: systemctl --user enable --now ydotool.service
 
 # ====== CONFIGURATION ======
 STARTUP_DELAY=10                   # Delay before starting (seconds)
