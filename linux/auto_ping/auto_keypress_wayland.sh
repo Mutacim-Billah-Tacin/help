@@ -52,9 +52,9 @@ while true; do
   sleep $RANDOM_SLEEP
 
   # Press W + Enter
-  ydotool key W:1 W:0          # Key press (W)
+  ydotool key 17:1 17:0          # Key press (W)
   sleep $DELAY_BEFORE_ENTER
-  ydotool key Return:1 Return:0 # Key press (Return)
+  ydotool key 28:1 28:0 # Key press (Return)
   notify-send "Auto Keypress" "W sent ✔️"
 done
 
