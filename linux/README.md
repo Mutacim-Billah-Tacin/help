@@ -6,7 +6,7 @@ I use fish btw
 
 ## Also for root 
 ```shell
-  sudo chsh -s $(which fish) root
+  sudo chsh -s $(which fish)
 ```
 
 ## Now change some configs of fish  
