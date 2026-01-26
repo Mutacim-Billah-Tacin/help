@@ -13,23 +13,28 @@
             --search-bg: #1f2335;
             --border: #414868;
         }
+
         body {
             background-color: var(--bg);
             color: var(--fg);
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
+
+        /* Search Bar Area */
         .search-container {
             margin-bottom: 50px;
             width: 100%;
             max-width: 600px;
             position: relative;
         }
+
         .search-bar {
             width: 100%;
             padding: 15px 25px;
@@ -39,11 +44,19 @@
             background-color: var(--search-bg);
             color: var(--fg);
             outline: none;
+            transition: all 0.2s ease;
             box-sizing: border-box;
         }
+
+        .search-bar:focus {
+            box-shadow: 0 0 15px var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* Suggestions Dropdown */
         .suggestions {
             position: absolute;
-            top: 105%;
+            top: 110%;
             left: 0;
             right: 0;
             background: var(--card-bg);
@@ -52,18 +65,23 @@
             list-style: none;
             padding: 5px 0;
             margin: 0;
+            z-index: 1000;
             display: none;
-            z-index: 999;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
+
         .suggestions li {
             padding: 12px 25px;
             cursor: pointer;
+            transition: background 0.1s;
         }
+
         .suggestions li:hover {
-            background: #2e3440;
+            background: var(--search-bg);
             color: var(--accent);
         }
+
+        /* Dashboard Grid */
         .container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -71,16 +89,34 @@
             width: 80%;
             max-width: 900px;
         }
+
         .section {
             background: var(--card-bg);
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 12px;
             border: 1px solid var(--border);
         }
-        h2 { color: var(--accent); font-size: 0.9rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; text-transform: uppercase; }
-        ul { list-style: none; padding: 0; }
+
+        h2 {
+            color: var(--accent);
+            font-size: 0.85rem;
+            margin-top: 0;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        ul { list-style: none; padding: 0; margin: 0; }
         li { margin: 10px 0; }
-        a { color: var(--fg); text-decoration: none; }
+        
+        a {
+            color: var(--fg);
+            text-decoration: none;
+            transition: color 0.2s;
+            display: block;
+        }
+
         a:hover { color: var(--accent); }
     </style>
 </head>
@@ -102,14 +138,17 @@
             <li><a href="https://www.keybr.com/">Keybr</a></li>
         </ul>
     </div>
+
     <div class="section">
         <h2>Social</h2>
         <ul>
             <li><a href="https://reddit.com">Reddit</a></li>
             <li><a href="https://x.com">X</a></li>
             <li><a href="https://discord.com">Discord</a></li>
+            <li><a href="https://www.facebook.com/messages/">Messenger</a></li>
         </ul>
     </div>
+
     <div class="section">
         <h2>Tools</h2>
         <ul>
@@ -124,17 +163,27 @@
     const box = document.getElementById('suggestions-box');
     const form = document.getElementById('search-form');
 
-    // GitHub Pages needs this to be strictly attached to the window
+    // Cleans the text by removing metadata numbers after a comma
+    function cleanSuggestion(text) {
+        if (typeof text !== 'string') return text;
+        return text.split(',')[0];
+    }
+
     window.handleSuggestions = function(data) {
         const results = data[1];
         box.innerHTML = '';
+        
         if (results && results.length > 0) {
             box.style.display = 'block';
-            results.slice(0, 8).forEach(text => {
+            results.slice(0, 8).forEach(item => {
+                // Ensure we handle both string and array formats from Google
+                const rawText = Array.isArray(item) ? item[0] : item;
+                const cleanText = cleanSuggestion(rawText);
+                
                 const li = document.createElement('li');
-                li.textContent = text;
+                li.textContent = cleanText;
                 li.onclick = () => {
-                    input.value = text;
+                    input.value = cleanText;
                     form.submit();
                 };
                 box.appendChild(li);
@@ -145,22 +194,22 @@
     };
 
     input.addEventListener('input', () => {
-        const val = input.value.trim();
-        if (val.length > 0) {
-            // Remove previous script to keep the head clean
+        const query = input.value.trim();
+        if (query.length > 0) {
             const oldScript = document.getElementById('suggest-script');
             if (oldScript) oldScript.remove();
 
             const script = document.createElement('script');
             script.id = 'suggest-script';
-            // HTTPS mandatory for GitHub Pages
-            script.src = `https://suggestqueries.google.com/complete/search?client=youtube&q=${encodeURIComponent(val)}&callback=handleSuggestions`;
+            // Using 'firefox' client often returns cleaner data than 'chrome' or 'youtube'
+            script.src = `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}&callback=handleSuggestions`;
             document.head.appendChild(script);
         } else {
             box.style.display = 'none';
         }
     });
 
+    // Hide box when clicking away
     document.addEventListener('click', (e) => {
         if (!input.contains(e.target)) box.style.display = 'none';
     });
