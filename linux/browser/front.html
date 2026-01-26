@@ -11,39 +11,77 @@
             --accent: #7aa2f7;
             --card-bg: #24283b;
             --search-bg: #1f2335;
+            --border: #414868;
         }
+
         body {
             background-color: var(--bg);
             color: var(--fg);
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
+
         /* Search Bar Styling */
         .search-container {
             margin-bottom: 50px;
             width: 100%;
             max-width: 600px;
+            position: relative;
         }
+
         .search-bar {
             width: 100%;
             padding: 15px 25px;
             font-size: 1.2rem;
             border-radius: 30px;
-            border: 1px solid #414868;
+            border: 1px solid var(--border);
             background-color: var(--search-bg);
             color: var(--fg);
             outline: none;
-            transition: box-shadow 0.2s;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
         }
+
         .search-bar:focus {
-            box-shadow: 0 0 10px var(--accent);
+            box-shadow: 0 0 15px var(--accent);
             border-color: var(--accent);
+            background-color: var(--card-bg);
         }
+
+        /* Suggestion List */
+        .suggestions {
+            position: absolute;
+            top: 110%;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            list-style: none;
+            padding: 5px 0;
+            margin: 0;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .suggestions li {
+            padding: 12px 25px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .suggestions li:hover, .suggestions li.selected {
+            background: var(--search-bg);
+            color: var(--accent);
+        }
+
         /* Grid Styling */
         .container {
             display: grid;
@@ -52,44 +90,53 @@
             width: 80%;
             max-width: 900px;
         }
+
         .section {
             background: var(--card-bg);
             padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #414868;
+            border-radius: 12px;
+            border: 1px solid var(--border);
         }
+
         h2 {
             color: var(--accent);
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             margin-top: 0;
-            border-bottom: 1px solid #414868;
+            border-bottom: 1px solid var(--border);
             padding-bottom: 10px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
         }
+
         ul {
             list-style: none;
             padding: 0;
+            margin-bottom: 0;
         }
+
         li {
             margin: 10px 0;
         }
+
         a {
             color: var(--fg);
             text-decoration: none;
-            transition: color 0.2s;
-            display: block;
+            transition: color 0.2s, transform 0.2s;
+            display: inline-block;
         }
+
         a:hover {
             color: var(--accent);
+            transform: translateX(5px);
         }
     </style>
 </head>
 <body>
 
 <div class="search-container">
-    <form action="https://www.google.com/search" method="get">
-        <input type="text" name="q" class="search-bar" placeholder="Search Google..." autofocus autocomplete="off">
+    <form action="https://www.google.com/search" method="get" id="search-form">
+        <input type="text" name="q" id="search-bar" class="search-bar" placeholder="Search Google..." autofocus autocomplete="off">
+        <ul id="suggestions-list" class="suggestions"></ul>
     </form>
 </div>
 
@@ -121,6 +168,83 @@
         </ul>
     </div>
 </div>
+
+<script>
+    const searchBar = document.getElementById('search-bar');
+    const suggestionsList = document.getElementById('suggestions-list');
+    const searchForm = document.getElementById('search-form');
+    let selectedIndex = -1;
+
+    // Fetch suggestions from Google
+    searchBar.addEventListener('input', () => {
+        const query = searchBar.value;
+        if (query.length > 0) {
+            const script = document.createElement('script');
+            script.src = `https://suggestqueries.google.com/complete/search?client=chrome&q=${encodeURIComponent(query)}&callback=showSuggestions`;
+            document.body.appendChild(script);
+            document.body.removeChild(script);
+        } else {
+            hideSuggestions();
+        }
+    });
+
+    window.showSuggestions = (data) => {
+        const results = data[1];
+        suggestionsList.innerHTML = '';
+        selectedIndex = -1;
+        
+        if (results.length > 0) {
+            suggestionsList.style.display = 'block';
+            results.slice(0, 8).forEach((item, index) => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                li.addEventListener('click', () => {
+                    searchBar.value = item;
+                    searchForm.submit();
+                });
+                suggestionsList.appendChild(li);
+            });
+        } else {
+            hideSuggestions();
+        }
+    };
+
+    // Keyboard Navigation (Arrow Keys + Enter)
+    searchBar.addEventListener('keydown', (e) => {
+        const items = suggestionsList.getElementsByTagName('li');
+        
+        if (e.key === 'ArrowDown') {
+            selectedIndex = (selectedIndex + 1) % items.length;
+            updateSelection(items);
+            e.preventDefault();
+        } else if (e.key === 'ArrowUp') {
+            selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+            updateSelection(items);
+            e.preventDefault();
+        } else if (e.key === 'Enter' && selectedIndex > -1) {
+            searchBar.value = items[selectedIndex].textContent;
+        }
+    });
+
+    function updateSelection(items) {
+        for (let i = 0; i < items.length; i++) {
+            items[i].classList.remove('selected');
+        }
+        if (selectedIndex > -1) {
+            items[selectedIndex].classList.add('selected');
+            searchBar.value = items[selectedIndex].textContent;
+        }
+    }
+
+    function hideSuggestions() {
+        suggestionsList.style.display = 'none';
+    }
+
+    // Hide suggestions when clicking elsewhere
+    document.addEventListener('click', (e) => {
+        if (!searchBar.contains(e.target)) hideSuggestions();
+    });
+</script>
 
 </body>
 </html>
