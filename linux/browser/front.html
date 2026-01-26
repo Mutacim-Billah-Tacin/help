@@ -17,13 +17,14 @@
         body {
             background-color: var(--bg);
             color: var(--fg);
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
 
         .search-container {
@@ -43,30 +44,39 @@
             color: var(--fg);
             outline: none;
             box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .search-bar:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(122, 162, 247, 0.2);
         }
 
         .suggestions {
             position: absolute;
-            top: 105%;
+            top: 110%;
             left: 0;
             right: 0;
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 15px;
             list-style: none;
-            padding: 5px 0;
+            padding: 8px 0;
             margin: 0;
             display: none;
-            z-index: 999;
+            z-index: 1000;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .suggestions li {
             padding: 12px 25px;
             cursor: pointer;
+            color: var(--fg);
+            transition: background 0.1s;
         }
 
-        .suggestions li:hover {
+        /* Styling for the selected item via keyboard or hover */
+        .suggestions li.selected, .suggestions li:hover {
             background: #2e3440;
             color: var(--accent);
         }
@@ -82,14 +92,23 @@
         .section {
             background: var(--card-bg);
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 12px;
             border: 1px solid var(--border);
         }
 
-        h2 { color: var(--accent); font-size: 0.9rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; text-transform: uppercase; }
-        ul { list-style: none; padding: 0; }
+        h2 {
+            color: var(--accent);
+            font-size: 0.85rem;
+            margin-top: 0;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        ul { list-style: none; padding: 0; margin: 0; }
         li { margin: 10px 0; }
-        a { color: var(--fg); text-decoration: none; }
+        a { color: var(--fg); text-decoration: none; transition: 0.2s; display: block; }
         a:hover { color: var(--accent); }
     </style>
 </head>
@@ -117,6 +136,7 @@
             <li><a href="https://reddit.com">Reddit</a></li>
             <li><a href="https://x.com">X</a></li>
             <li><a href="https://discord.com">Discord</a></li>
+            <li><a href="https://www.facebook.com/messages/">Messenger</a></li>
         </ul>
     </div>
     <div class="section">
@@ -132,18 +152,20 @@
     const input = document.getElementById('search-input');
     const box = document.getElementById('suggestions-box');
     const form = document.getElementById('search-form');
+    let selectedIndex = -1;
 
-    // Callback function for Google JSONP
-    window.googleCallback = function(data) {
-        const queries = data[1];
+    window.handleSuggestions = function(data) {
+        const results = data[1];
         box.innerHTML = '';
+        selectedIndex = -1; // Reset selection index when new suggestions arrive
         
-        if (queries && queries.length > 0) {
+        if (results && results.length > 0) {
             box.style.display = 'block';
-            queries.slice(0, 8).forEach(item => {
-                // Ensure we handle the nested array structure [ "text", metadata ]
-                const text = Array.isArray(item) ? item[0] : item;
-                const cleanText = text.split(',')[0]; // Final strip of metadata numbers
+            results.slice(0, 8).forEach((item, index) => {
+                // FIX: If item is an array (chrome/youtube client), take index 0. 
+                // Then split by comma just in case Firefox client adds metadata strings.
+                const rawText = Array.isArray(item) ? item[0] : item;
+                const cleanText = rawText.split(',')[0];
 
                 const li = document.createElement('li');
                 li.textContent = cleanText;
@@ -159,20 +181,51 @@
     };
 
     input.addEventListener('input', () => {
-        const val = input.value.trim();
-        if (val.length > 0) {
-            const oldScript = document.getElementById('jsonp-script');
+        const query = input.value.trim();
+        if (query.length > 0) {
+            const oldScript = document.getElementById('suggest-script');
             if (oldScript) oldScript.remove();
 
             const script = document.createElement('script');
-            script.id = 'jsonp-script';
-            // Added 'no-referrer' to the src via query or meta if needed, but client=youtube is key
-            script.src = `https://suggestqueries.google.com/complete/search?client=youtube&hl=en&q=${encodeURIComponent(val)}&callback=googleCallback`;
-            document.body.appendChild(script);
+            script.id = 'suggest-script';
+            // client=firefox is used because it typically sends cleaner data
+            script.src = `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}&callback=handleSuggestions`;
+            document.head.appendChild(script);
         } else {
             box.style.display = 'none';
         }
     });
+
+    // KEYBOARD NAVIGATION: Up, Down, and Enter
+    input.addEventListener('keydown', (e) => {
+        const items = box.querySelectorAll('li');
+        if (items.length === 0) return;
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault(); // Stop cursor from moving in input
+            selectedIndex = (selectedIndex + 1) % items.length;
+            highlightItem(items);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+            highlightItem(items);
+        } else if (e.key === 'Enter' && selectedIndex > -1) {
+            e.preventDefault();
+            input.value = items[selectedIndex].textContent;
+            form.submit();
+        }
+    });
+
+    function highlightItem(items) {
+        items.forEach((li, index) => {
+            if (index === selectedIndex) {
+                li.classList.add('selected');
+                input.value = li.textContent; // Optional: Sync input with selected item
+            } else {
+                li.classList.remove('selected');
+            }
+        });
+    }
 
     document.addEventListener('click', (e) => {
         if (!input.contains(e.target)) box.style.display = 'none';
