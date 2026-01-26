@@ -13,7 +13,6 @@
             --search-bg: #1f2335;
             --border: #414868;
         }
-
         body {
             background-color: var(--bg);
             color: var(--fg);
@@ -25,14 +24,12 @@
             height: 100vh;
             margin: 0;
         }
-
         .search-container {
             margin-bottom: 50px;
             width: 100%;
             max-width: 600px;
             position: relative;
         }
-
         .search-bar {
             width: 100%;
             padding: 15px 25px;
@@ -44,35 +41,29 @@
             outline: none;
             box-sizing: border-box;
         }
-
-        /* Suggestion Dropdown */
         .suggestions {
             position: absolute;
-            top: 100%;
+            top: 105%;
             left: 0;
             right: 0;
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 0 0 20px 20px;
+            border-radius: 15px;
             list-style: none;
-            padding: 10px 0;
-            margin: 5px 0 0 0;
+            padding: 5px 0;
+            margin: 0;
             display: none;
-            z-index: 100;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+            z-index: 999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-
         .suggestions li {
-            padding: 10px 25px;
+            padding: 12px 25px;
             cursor: pointer;
         }
-
         .suggestions li:hover {
-            background-color: var(--search-bg);
+            background: #2e3440;
             color: var(--accent);
         }
-
-        /* Grid */
         .container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -80,18 +71,16 @@
             width: 80%;
             max-width: 900px;
         }
-
         .section {
             background: var(--card-bg);
             padding: 20px;
             border-radius: 8px;
             border: 1px solid var(--border);
         }
-
-        h2 { color: var(--accent); font-size: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; text-transform: uppercase; }
+        h2 { color: var(--accent); font-size: 0.9rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; text-transform: uppercase; }
         ul { list-style: none; padding: 0; }
         li { margin: 10px 0; }
-        a { color: var(--fg); text-decoration: none; transition: 0.2s; }
+        a { color: var(--fg); text-decoration: none; }
         a:hover { color: var(--accent); }
     </style>
 </head>
@@ -100,7 +89,7 @@
 <div class="search-container">
     <form action="https://www.google.com/search" method="get" id="search-form">
         <input type="text" name="q" id="search-input" class="search-bar" placeholder="Search Google..." autofocus autocomplete="off">
-        <ul id="suggestions" class="suggestions"></ul>
+        <ul id="suggestions-box" class="suggestions"></ul>
     </form>
 </div>
 
@@ -132,47 +121,48 @@
 
 <script>
     const input = document.getElementById('search-input');
-    const suggestionBox = document.getElementById('suggestions');
+    const box = document.getElementById('suggestions-box');
     const form = document.getElementById('search-form');
 
-    // This globally available function handles the data Google sends back
+    // GitHub Pages needs this to be strictly attached to the window
     window.handleSuggestions = function(data) {
-        const queries = data[1];
-        suggestionBox.innerHTML = '';
-        
-        if (queries.length > 0) {
-            suggestionBox.style.display = 'block';
-            queries.forEach(text => {
+        const results = data[1];
+        box.innerHTML = '';
+        if (results && results.length > 0) {
+            box.style.display = 'block';
+            results.slice(0, 8).forEach(text => {
                 const li = document.createElement('li');
                 li.textContent = text;
                 li.onclick = () => {
                     input.value = text;
                     form.submit();
                 };
-                suggestionBox.appendChild(li);
+                box.appendChild(li);
             });
         } else {
-            suggestionBox.style.display = 'none';
+            box.style.display = 'none';
         }
     };
 
     input.addEventListener('input', () => {
-        const query = input.value.trim();
-        if (query.length > 0) {
-            // Inject a script tag to bypass CORS
+        const val = input.value.trim();
+        if (val.length > 0) {
+            // Remove previous script to keep the head clean
+            const oldScript = document.getElementById('suggest-script');
+            if (oldScript) oldScript.remove();
+
             const script = document.createElement('script');
-            script.src = `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}&callback=handleSuggestions`;
-            document.body.appendChild(script);
-            // Clean up the script tag after it loads
-            script.onload = () => script.remove();
+            script.id = 'suggest-script';
+            // HTTPS mandatory for GitHub Pages
+            script.src = `https://suggestqueries.google.com/complete/search?client=youtube&q=${encodeURIComponent(val)}&callback=handleSuggestions`;
+            document.head.appendChild(script);
         } else {
-            suggestionBox.style.display = 'none';
+            box.style.display = 'none';
         }
     });
 
-    // Close suggestions if you click outside
     document.addEventListener('click', (e) => {
-        if (!input.contains(e.target)) suggestionBox.style.display = 'none';
+        if (!input.contains(e.target)) box.style.display = 'none';
     });
 </script>
 
