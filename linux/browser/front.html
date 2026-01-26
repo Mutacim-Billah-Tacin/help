@@ -17,17 +17,15 @@
         body {
             background-color: var(--bg);
             color: var(--fg);
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
             margin: 0;
-            overflow: hidden;
         }
 
-        /* Search Bar Area */
         .search-container {
             margin-bottom: 50px;
             width: 100%;
@@ -44,19 +42,12 @@
             background-color: var(--search-bg);
             color: var(--fg);
             outline: none;
-            transition: all 0.2s ease;
             box-sizing: border-box;
         }
 
-        .search-bar:focus {
-            box-shadow: 0 0 15px var(--accent);
-            border-color: var(--accent);
-        }
-
-        /* Suggestions Dropdown */
         .suggestions {
             position: absolute;
-            top: 110%;
+            top: 105%;
             left: 0;
             right: 0;
             background: var(--card-bg);
@@ -65,23 +56,21 @@
             list-style: none;
             padding: 5px 0;
             margin: 0;
-            z-index: 1000;
             display: none;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .suggestions li {
             padding: 12px 25px;
             cursor: pointer;
-            transition: background 0.1s;
         }
 
         .suggestions li:hover {
-            background: var(--search-bg);
+            background: #2e3440;
             color: var(--accent);
         }
 
-        /* Dashboard Grid */
         .container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -93,30 +82,14 @@
         .section {
             background: var(--card-bg);
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 8px;
             border: 1px solid var(--border);
         }
 
-        h2 {
-            color: var(--accent);
-            font-size: 0.85rem;
-            margin-top: 0;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        ul { list-style: none; padding: 0; margin: 0; }
+        h2 { color: var(--accent); font-size: 0.9rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; text-transform: uppercase; }
+        ul { list-style: none; padding: 0; }
         li { margin: 10px 0; }
-        
-        a {
-            color: var(--fg);
-            text-decoration: none;
-            transition: color 0.2s;
-            display: block;
-        }
-
+        a { color: var(--fg); text-decoration: none; }
         a:hover { color: var(--accent); }
     </style>
 </head>
@@ -138,17 +111,14 @@
             <li><a href="https://www.keybr.com/">Keybr</a></li>
         </ul>
     </div>
-
     <div class="section">
         <h2>Social</h2>
         <ul>
             <li><a href="https://reddit.com">Reddit</a></li>
             <li><a href="https://x.com">X</a></li>
             <li><a href="https://discord.com">Discord</a></li>
-            <li><a href="https://www.facebook.com/messages/">Messenger</a></li>
         </ul>
     </div>
-
     <div class="section">
         <h2>Tools</h2>
         <ul>
@@ -163,23 +133,18 @@
     const box = document.getElementById('suggestions-box');
     const form = document.getElementById('search-form');
 
-    // Cleans the text by removing metadata numbers after a comma
-    function cleanSuggestion(text) {
-        if (typeof text !== 'string') return text;
-        return text.split(',')[0];
-    }
-
-    window.handleSuggestions = function(data) {
-        const results = data[1];
+    // Callback function for Google JSONP
+    window.googleCallback = function(data) {
+        const queries = data[1];
         box.innerHTML = '';
         
-        if (results && results.length > 0) {
+        if (queries && queries.length > 0) {
             box.style.display = 'block';
-            results.slice(0, 8).forEach(item => {
-                // Ensure we handle both string and array formats from Google
-                const rawText = Array.isArray(item) ? item[0] : item;
-                const cleanText = cleanSuggestion(rawText);
-                
+            queries.slice(0, 8).forEach(item => {
+                // Ensure we handle the nested array structure [ "text", metadata ]
+                const text = Array.isArray(item) ? item[0] : item;
+                const cleanText = text.split(',')[0]; // Final strip of metadata numbers
+
                 const li = document.createElement('li');
                 li.textContent = cleanText;
                 li.onclick = () => {
@@ -194,22 +159,21 @@
     };
 
     input.addEventListener('input', () => {
-        const query = input.value.trim();
-        if (query.length > 0) {
-            const oldScript = document.getElementById('suggest-script');
+        const val = input.value.trim();
+        if (val.length > 0) {
+            const oldScript = document.getElementById('jsonp-script');
             if (oldScript) oldScript.remove();
 
             const script = document.createElement('script');
-            script.id = 'suggest-script';
-            // Using 'firefox' client often returns cleaner data than 'chrome' or 'youtube'
-            script.src = `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}&callback=handleSuggestions`;
-            document.head.appendChild(script);
+            script.id = 'jsonp-script';
+            // Added 'no-referrer' to the src via query or meta if needed, but client=youtube is key
+            script.src = `https://suggestqueries.google.com/complete/search?client=youtube&hl=en&q=${encodeURIComponent(val)}&callback=googleCallback`;
+            document.body.appendChild(script);
         } else {
             box.style.display = 'none';
         }
     });
 
-    // Hide box when clicking away
     document.addEventListener('click', (e) => {
         if (!input.contains(e.target)) box.style.display = 'none';
     });
