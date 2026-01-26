@@ -17,17 +17,15 @@
         body {
             background-color: var(--bg);
             color: var(--fg);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
             margin: 0;
-            overflow: hidden;
         }
 
-        /* Search Bar Styling */
         .search-container {
             margin-bottom: 50px;
             width: 100%;
@@ -44,45 +42,37 @@
             background-color: var(--search-bg);
             color: var(--fg);
             outline: none;
-            transition: all 0.2s ease;
             box-sizing: border-box;
         }
 
-        .search-bar:focus {
-            box-shadow: 0 0 15px var(--accent);
-            border-color: var(--accent);
-            background-color: var(--card-bg);
-        }
-
-        /* Suggestion List */
+        /* Suggestion Dropdown */
         .suggestions {
             position: absolute;
-            top: 110%;
+            top: 100%;
             left: 0;
             right: 0;
             background: var(--card-bg);
             border: 1px solid var(--border);
-            border-radius: 15px;
+            border-radius: 0 0 20px 20px;
             list-style: none;
-            padding: 5px 0;
-            margin: 0;
-            z-index: 1000;
+            padding: 10px 0;
+            margin: 5px 0 0 0;
             display: none;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 100;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
         }
 
         .suggestions li {
-            padding: 12px 25px;
+            padding: 10px 25px;
             cursor: pointer;
-            transition: background 0.2s;
         }
 
-        .suggestions li:hover, .suggestions li.selected {
-            background: var(--search-bg);
+        .suggestions li:hover {
+            background-color: var(--search-bg);
             color: var(--accent);
         }
 
-        /* Grid Styling */
+        /* Grid */
         .container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -94,49 +84,23 @@
         .section {
             background: var(--card-bg);
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 8px;
             border: 1px solid var(--border);
         }
 
-        h2 {
-            color: var(--accent);
-            font-size: 0.9rem;
-            margin-top: 0;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 0;
-        }
-
-        li {
-            margin: 10px 0;
-        }
-
-        a {
-            color: var(--fg);
-            text-decoration: none;
-            transition: color 0.2s, transform 0.2s;
-            display: inline-block;
-        }
-
-        a:hover {
-            color: var(--accent);
-            transform: translateX(5px);
-        }
+        h2 { color: var(--accent); font-size: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; text-transform: uppercase; }
+        ul { list-style: none; padding: 0; }
+        li { margin: 10px 0; }
+        a { color: var(--fg); text-decoration: none; transition: 0.2s; }
+        a:hover { color: var(--accent); }
     </style>
 </head>
 <body>
 
 <div class="search-container">
     <form action="https://www.google.com/search" method="get" id="search-form">
-        <input type="text" name="q" id="search-bar" class="search-bar" placeholder="Search Google..." autofocus autocomplete="off">
-        <ul id="suggestions-list" class="suggestions"></ul>
+        <input type="text" name="q" id="search-input" class="search-bar" placeholder="Search Google..." autofocus autocomplete="off">
+        <ul id="suggestions" class="suggestions"></ul>
     </form>
 </div>
 
@@ -149,17 +113,14 @@
             <li><a href="https://www.keybr.com/">Keybr</a></li>
         </ul>
     </div>
-
     <div class="section">
         <h2>Social</h2>
         <ul>
             <li><a href="https://reddit.com">Reddit</a></li>
             <li><a href="https://x.com">X</a></li>
             <li><a href="https://discord.com">Discord</a></li>
-            <li><a href="https://www.facebook.com/messages/">Messenger</a></li>
         </ul>
     </div>
-
     <div class="section">
         <h2>Tools</h2>
         <ul>
@@ -170,79 +131,48 @@
 </div>
 
 <script>
-    const searchBar = document.getElementById('search-bar');
-    const suggestionsList = document.getElementById('suggestions-list');
-    const searchForm = document.getElementById('search-form');
-    let selectedIndex = -1;
+    const input = document.getElementById('search-input');
+    const suggestionBox = document.getElementById('suggestions');
+    const form = document.getElementById('search-form');
 
-    // Fetch suggestions from Google
-    searchBar.addEventListener('input', () => {
-        const query = searchBar.value;
-        if (query.length > 0) {
-            const script = document.createElement('script');
-            script.src = `https://suggestqueries.google.com/complete/search?client=chrome&q=${encodeURIComponent(query)}&callback=showSuggestions`;
-            document.body.appendChild(script);
-            document.body.removeChild(script);
-        } else {
-            hideSuggestions();
-        }
-    });
-
-    window.showSuggestions = (data) => {
-        const results = data[1];
-        suggestionsList.innerHTML = '';
-        selectedIndex = -1;
+    // This globally available function handles the data Google sends back
+    window.handleSuggestions = function(data) {
+        const queries = data[1];
+        suggestionBox.innerHTML = '';
         
-        if (results.length > 0) {
-            suggestionsList.style.display = 'block';
-            results.slice(0, 8).forEach((item, index) => {
+        if (queries.length > 0) {
+            suggestionBox.style.display = 'block';
+            queries.forEach(text => {
                 const li = document.createElement('li');
-                li.textContent = item;
-                li.addEventListener('click', () => {
-                    searchBar.value = item;
-                    searchForm.submit();
-                });
-                suggestionsList.appendChild(li);
+                li.textContent = text;
+                li.onclick = () => {
+                    input.value = text;
+                    form.submit();
+                };
+                suggestionBox.appendChild(li);
             });
         } else {
-            hideSuggestions();
+            suggestionBox.style.display = 'none';
         }
     };
 
-    // Keyboard Navigation (Arrow Keys + Enter)
-    searchBar.addEventListener('keydown', (e) => {
-        const items = suggestionsList.getElementsByTagName('li');
-        
-        if (e.key === 'ArrowDown') {
-            selectedIndex = (selectedIndex + 1) % items.length;
-            updateSelection(items);
-            e.preventDefault();
-        } else if (e.key === 'ArrowUp') {
-            selectedIndex = (selectedIndex - 1 + items.length) % items.length;
-            updateSelection(items);
-            e.preventDefault();
-        } else if (e.key === 'Enter' && selectedIndex > -1) {
-            searchBar.value = items[selectedIndex].textContent;
+    input.addEventListener('input', () => {
+        const query = input.value.trim();
+        if (query.length > 0) {
+            // Inject a script tag to bypass CORS
+            const script = document.createElement('script');
+            script.src = `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}&callback=handleSuggestions`;
+            document.body.appendChild(script);
+            // Clean up the script tag after it loads
+            script.onload = () => script.remove();
+        } else {
+            suggestionBox.style.display = 'none';
         }
     });
 
-    function updateSelection(items) {
-        for (let i = 0; i < items.length; i++) {
-            items[i].classList.remove('selected');
-        }
-        if (selectedIndex > -1) {
-            items[selectedIndex].classList.add('selected');
-            searchBar.value = items[selectedIndex].textContent;
-        }
-    }
-
-    function hideSuggestions() {
-        suggestionsList.style.display = 'none';
-    }
-
-    // Hide suggestions when clicking elsewhere
+    // Close suggestions if you click outside
     document.addEventListener('click', (e) => {
-        if (!searchBar.contains(e.target)) hideSuggestions();
+        if (!input.contains(e.target)) suggestionBox.style.display = 'none';
     });
 </script>
 
