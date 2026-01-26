@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startpage</title>
+    <style>
+        :root {
+            --bg: #1a1b26;
+            --fg: #a9b1d6;
+            --accent: #7aa2f7;
+            --card-bg: #24283b;
+            --search-bg: #1f2335;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--fg);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        /* Search Bar Styling */
+        .search-container {
+            margin-bottom: 50px;
+            width: 100%;
+            max-width: 600px;
+        }
+        .search-bar {
+            width: 100%;
+            padding: 15px 25px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            border: 1px solid #414868;
+            background-color: var(--search-bg);
+            color: var(--fg);
+            outline: none;
+            transition: box-shadow 0.2s;
+        }
+        .search-bar:focus {
+            box-shadow: 0 0 10px var(--accent);
+            border-color: var(--accent);
+        }
+        /* Grid Styling */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 80%;
+            max-width: 900px;
+        }
+        .section {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #414868;
+        }
+        h2 {
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin-top: 0;
+            border-bottom: 1px solid #414868;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+        }
+        a {
+            color: var(--fg);
+            text-decoration: none;
+            transition: color 0.2s;
+            display: block;
+        }
+        a:hover {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+<div class="search-container">
+    <form action="https://www.google.com/search" method="get">
+        <input type="text" name="q" class="search-bar" placeholder="Search Google..." autofocus autocomplete="off">
+    </form>
+</div>
+
+<div class="container">
+    <div class="section">
+        <h2>Daily</h2>
+        <ul>
+            <li><a href="https://gmail.com">Gmail</a></li>
+            <li><a href="https://youtube.com">YouTube</a></li>
+            <li><a href="https://www.keybr.com/">Keybr</a></li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Social</h2>
+        <ul>
+            <li><a href="https://reddit.com">Reddit</a></li>
+            <li><a href="https://x.com">X</a></li>
+            <li><a href="https://discord.com">Discord</a></li>
+            <li><a href="https://www.facebook.com/messages/">Messenger</a></li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Tools</h2>
+        <ul>
+            <li><a href="https://chatgpt.com">ChatGPT</a></li>
+            <li><a href="https://github.com">GitHub</a></li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>
