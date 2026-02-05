@@ -64,6 +64,7 @@ nvim ~/.config/systemd/user/sober-limit.service
 
 ---
 
+```shell
 [Unit]
 Description=Sober 1-Hour Daily Limit Watchdog
 After=graphical-session.target
@@ -75,6 +76,7 @@ RestartSec=5
 
 [Install]
 WantedBy=default.target
+```
 
 ---
 
