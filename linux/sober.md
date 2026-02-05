@@ -80,9 +80,10 @@ WantedBy=default.target
 
 ---
 
-systemctl --user daemon-reload
-systemctl --user enable --now sober-limit.service
+systemctl --user daemon-reload  
+systemctl --user enable --now sober-limit.service  
+systemctl --user status sober-limit.service
 
 ---
 
-wc -c /tmp/sober*usage*$(date +%F)
+echo (math (wc -c < /tmp/sober_usage_(date +%F)) / 6) "minutes used."
