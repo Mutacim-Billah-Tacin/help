@@ -1,89 +1,48 @@
-nvim ~/.sober-watchdog.sh
+🛡️ Sober Watchdog
+A lightweight, zero-dependency session manager for Sober (Roblox) on Linux.
 
----
+Keep your productivity high and your gaming sessions intentional. This script tracks your daily usage and automatically terminates the game once your limit is reached.
 
-```bash
-#!/bin/bash
+✨ Features
+Daily Tracking: Resets automatically every midnight.
 
-# 30 minutes = 1800 seconds. 1800 / 10s interval = 180 dots.
+Systemd Integration: Runs silently in the background.
 
-LIMIT=180
-WARNING=150
-TRACKER="/tmp/sober*usage*$(date +%F)"
-SENT_LIMIT_NOTIFY=false
-SENT_WARN_NOTIFY=false
+Smart Detection: Works with both Flatpak and Native installations.
 
-touch "$TRACKER"
+Lightweight: Uses negligible CPU resources (10s polling interval).
 
-while true; do
+🚀 Quick Start
+Download the script: Save the code above as sober-watchdog.sh in your home folder.
 
-# Search for ANY process with 'sober' in the name
+Make it executable:
 
-if pgrep -x "sober" >/dev/null; then
-echo -n "." >>"$TRACKER"
-    USED=$(wc -c <"$TRACKER")
+Bash
+chmod +x ~/sober-watchdog.sh
+Create the Service (Background Mode): Create ~/.config/systemd/user/sober-limit.service and paste:
 
-    # 1. Limit Check (30 mins)
-    if [ "$USED" -ge "$LIMIT" ]; then
-      if [ "$SENT_LIMIT_NOTIFY" = false ]; then
-        notify-send -u critical "Sober" "30-Minute Limit Reached! Closing."
-        SENT_LIMIT_NOTIFY=true
-      fi
-      # Kill the flatpak AND the binary specifically
-      flatpak kill org.vinegarhq.Sober 2>/dev/null
-      pkill -9 -fi "sober" 2>/dev/null
-
-    # 2. Warning Check (25 mins)
-    elif [ "$USED" -ge "$WARNING" ]; then
-      if [ "$SENT_WARN_NOTIFY" = false ]; then
-        notify-send -u normal "Sober" "5 minutes left for today!"
-        SENT_WARN_NOTIFY=true
-      fi
-    fi
-
-else # Game is closed, reset flags
-SENT_LIMIT_NOTIFY=false
-SENT_WARN_NOTIFY=false
-fi
-
-sleep 10
-done
-```
-
----
-
-chmod +x ~/.sober-watchdog.sh
-
----
-
-mkdir -p ~/.config/systemd/user/
-
----
-
-nvim ~/.config/systemd/user/sober-limit.service
-
----
-
-```shell
+Ini, TOML
 [Unit]
-Description=Sober 1-Hour Daily Limit Watchdog
+Description=Sober Daily Limit Watchdog
 After=graphical-session.target
 
 [Service]
-ExecStart=%h/.sober-watchdog.sh
+ExecStart=%h/sober-watchdog.sh
 Restart=always
-RestartSec=5
 
 [Install]
 WantedBy=default.target
-```
+Activate:
 
----
+Bash
+systemctl --user daemon-reload
+systemctl --user enable --now sober-limit.service
+📊 Check Your Usage
+Bash:
 
-systemctl --user daemon-reload  
-systemctl --user enable --now sober-limit.service  
-systemctl --user status sober-limit.service
+Bash
+echo "$(( $(wc -c < /tmp/sober_usage_$(date +%F)) / 6 )) minutes used."
+Fish:
 
----
-
+Code snippet
 echo (math (wc -c < /tmp/sober_usage_(date +%F)) / 6) "minutes used."
