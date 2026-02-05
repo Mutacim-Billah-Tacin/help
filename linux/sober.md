@@ -2,6 +2,7 @@ nvim ~/.sober-watchdog.sh
 
 ---
 
+```bash
 #!/bin/bash
 
 # 30 minutes = 1800 seconds. 1800 / 10s interval = 180 dots.
@@ -47,6 +48,7 @@ fi
 
 sleep 10
 done
+```
 
 ---
 
