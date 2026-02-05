@@ -32,7 +32,7 @@ nvim ~/sober-watchdog.sh
 # =================================================================
 
 # --- CONFIGURATION ---
-LIMIT_MINUTES=30
+LIMIT_MINUTES=60   # <--- Change it to you desired amount of time 
 CHECK_INTERVAL=10  # Seconds between checks
 TRACKER_DIR="/tmp" # Volatile storage (resets on reboot)
 # ---------------------
