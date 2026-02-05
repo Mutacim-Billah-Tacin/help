@@ -138,4 +138,19 @@ systemctl --user status sober-limit.service
 ### 5. Check Your Usage
 Add this to your shell config (.bashrc or config.fish) for a quick status update:
 
+#### For Fish Shell:
+```fish
+alias sobertime='echo (math (wc -c < /tmp/sober_usage_(date +%F)) / 6) "minutes used."'
+```
 
+#### For Bash Shell:
+```bash
+alias sobertime='echo "$(( $(wc -c < /tmp/sober_usage_$(date +%F)) / 6 )) minutes used."'
+```
+
+---
+
+## 🤝 Contributing
+Feel free to fork this and add more features like weekly limits or GUI trackers.
+
+# Stay sober, stay productive.
