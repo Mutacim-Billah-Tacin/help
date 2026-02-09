@@ -77,9 +77,13 @@ while true; do
       fi
     fi
   else
-    # Game is closed: reset flags so notifications work if they reopen
-    SENT_LIMIT_NOTIFY=false
-    SENT_WARN_NOTIFY=false
+    # FIX: Only reset flags if we haven't reached the daily limit yet.
+    # This prevents the notification from spamming once the limit is hit.
+    CURRENT_USED=$(wc -c < "$TRACKER" 2>/dev/null || echo 0)
+    if [ "$CURRENT_USED" -lt "$LIMIT" ]; then
+      SENT_LIMIT_NOTIFY=false
+      SENT_WARN_NOTIFY=false
+    fi
   fi
 
   sleep $CHECK_INTERVAL
