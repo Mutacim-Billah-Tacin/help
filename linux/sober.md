@@ -50,7 +50,8 @@ touch "$TRACKER"
 
 while true; do
   # Look for 'sober' but ignore this script and other common tools
-  if pgrep -x "sober" >/dev/null || pgrep -fi "org.vinegarhq.Sober" >/dev/null; then
+  # Checks for the process AND that a window is actually open
+  if pgrep -x "sober" >/dev/null && (xprop -name "Sober" >/dev/null 2>&1 || xprop -name "Roblox" >/dev/null 2>&1); then
     
     # Log 1 unit of time
     echo -n "." >> "$TRACKER"
