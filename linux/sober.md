@@ -140,12 +140,24 @@ Add this to your shell config (.bashrc or config.fish) for a quick status update
 
 #### For Fish Shell:
 ```fish
-alias sobertime='echo (math (wc -c < /tmp/sober_usage_(date +%F)) / 6) "minutes used."'
+alias sobertime='echo (math -s0 (wc -c < /tmp/sober_usage_(date +%F) 2>/dev/null || echo 0) / 6) "minutes used."'
 ```
+
+```fish
+funcsave sobertime
+```
+Now Reboot the PC
 
 #### For Bash Shell:
 ```bash
 alias sobertime='echo "$(( $(wc -c < /tmp/sober_usage_$(date +%F) 2>/dev/null || echo 0) / 6 )) minutes used."'
+```
+
+---
+
+## To Check the Remaining Time
+```shell
+sobertime
 ```
 
 ---
