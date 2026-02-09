@@ -145,7 +145,7 @@ alias sobertime='echo (math (wc -c < /tmp/sober_usage_(date +%F)) / 6) "minutes 
 
 #### For Bash Shell:
 ```bash
-alias sobertime='echo "$(( $(wc -c < /tmp/sober_usage_$(date +%F)) / 6 )) minutes used."'
+alias sobertime='echo "$(( $(wc -c < /tmp/sober_usage_$(date +%F) 2>/dev/null || echo 0) / 6 )) minutes used."'
 ```
 
 ---
