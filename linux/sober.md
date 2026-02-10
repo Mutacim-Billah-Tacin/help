@@ -37,6 +37,8 @@ CHECK_INTERVAL=10  # Seconds between checks
 TRACKER_DIR="$HOME/.local/share/sober-tracker" # Volatile storage (resets on reboot)
 # ---------------------
 
+mkdir -p "$TRACKER_DIR"
+
 # Math: Convert minutes to byte-count for the tracker file
 # Calculation: (Minutes * 60) / Interval
 LIMIT=$(( (LIMIT_MINUTES * 60) / CHECK_INTERVAL ))
