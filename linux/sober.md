@@ -22,73 +22,55 @@ Sober Watchdog monitors your gameplay in the background and enforces a strict da
 Create the script in your home directory:
 
 ```bash
-nvim ~/sober-watchdog.sh
+nvim ~/sr-watchdog.sh
 ```
 
 ```bash
 #!/bin/bash
-# =================================================================
-# SOBER WATCHDOG - A Portable Session Limiter for Linux
-# =================================================================
 
-# --- CONFIGURATION ---
-LIMIT_MINUTES=60   # <------- Change it to you desired amount of time 
-CHECK_INTERVAL=10  # Seconds between checks
-TRACKER_DIR="$HOME/.local/share/sober-tracker" # Volatile storage (resets on reboot)
-# ---------------------
+# Configuration
+LIMIT_MINUTES=60
+DATA_FILE="$HOME/.sober_usage"
+TODAY=$(date +%Y-%m-%d)
+APP_ID="org.sober.Sober"
 
-mkdir -p "$TRACKER_DIR"
-
-# Math: Convert minutes to byte-count for the tracker file
-# Calculation: (Minutes * 60) / Interval
-LIMIT=$(( (LIMIT_MINUTES * 60) / CHECK_INTERVAL ))
-WARNING=$(( LIMIT - (5 * 60 / CHECK_INTERVAL) )) # 5 minute warning
-TRACKER="$TRACKER_DIR/sober_usage_$(date +%F)"
-SENT_LIMIT_NOTIFY=false
-SENT_WARN_NOTIFY=false
-
-# Ensure tracker exists
-touch "$TRACKER"
+# Initialize daily file
+if [ ! -f "$DATA_FILE" ] || [ "$(head -n 1 "$DATA_FILE")" != "$TODAY" ]; then
+    echo "$TODAY" > "$DATA_FILE"
+    echo "0" >> "$DATA_FILE"
+fi
 
 while true; do
-  # Look for 'sober' but ignore this script and other common tools
-  # Checks for the process AND that a window is actually open
-  if pgrep -x "sober" >/dev/null && (xprop -name "Sober" >/dev/null 2>&1 || xprop -name "Roblox" >/dev/null 2>&1); then
-    
-    # Log 1 unit of time
-    echo -n "." >> "$TRACKER"
-    USED=$(wc -c < "$TRACKER" 2>/dev/null || echo 0)
-
-    # 1. FINAL LIMIT CHECK
-    if [ "$USED" -ge "$LIMIT" ]; then
-      if [ "$SENT_LIMIT_NOTIFY" = false ]; then
-        notify-send -u critical -i dialog-warning "Sober Watchdog" "Daily limit ($LIMIT_MINUTES min) reached. Closing game."
-        SENT_LIMIT_NOTIFY=true
-      fi
-      
-      # Kill attempts: Flatpak first, then native binary
-      flatpak kill org.vinegarhq.Sober 2>/dev/null
-      pkill -9 -x "sober" 2>/dev/null
-      sleep 5
-
-    # 2. WARNING CHECK (5 Minutes Left)
-    elif [ "$USED" -ge "$WARNING" ]; then
-      if [ "$SENT_WARN_NOTIFY" = false ]; then
-        notify-send -u normal -i dialog-information "Sober Watchdog" "Warning: Only 5 minutes left for today!"
-        SENT_WARN_NOTIFY=true
-      fi
+    # Detection logic confirmed working by user
+    if pgrep -f "bwrap.*sober" > /dev/null; then
+        
+        USAGE=$(sed -n '2p' "$DATA_FILE")
+        
+        if [ "$USAGE" -ge "$LIMIT_MINUTES" ]; then
+            # systemd needs these for notifications
+            export DISPLAY=:0
+            export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
+            
+            notify-send "Time's Up!" "Daily 10m limit reached. Closing Sober." -u critical
+            
+            # --- THE FORCE KILL SEQUENCE ---
+            # 1. Official Flatpak kill
+            flatpak kill "$APP_ID" 2>/dev/null
+            
+            # 2. Force kill Bubblewrap process (-9 is unblockable)
+            pkill -9 -f "bwrap.*sober" 2>/dev/null
+            
+            # 3. Cleanup kill for anything 'sober'
+            pkill -9 -fi "sober" 2>/dev/null
+        else
+            sleep 60
+            USAGE=$((USAGE + 1))
+            sed -i "2s/.*/$USAGE/" "$DATA_FILE"
+        fi
+    else
+        # Game closed, check again in 30s
+        sleep 30
     fi
-  else
-    # FIX: Only reset flags if we haven't reached the daily limit yet.
-    # This prevents the notification from spamming once the limit is hit.
-    CURRENT_USED=$(wc -c < "$TRACKER" 2>/dev/null || echo 0)
-    if [ "$CURRENT_USED" -lt "$LIMIT" ]; then
-      SENT_LIMIT_NOTIFY=false
-      SENT_WARN_NOTIFY=false
-    fi
-  fi
-
-  sleep $CHECK_INTERVAL
 done
 ```
 
@@ -97,7 +79,7 @@ done
 ### 2. Make it Executable
 
 ```bash
-chmod +x ~/sober-watchdog.sh
+chmod +x ~/sr-watchdog.sh
 ```
 
 ---
@@ -107,7 +89,7 @@ This ensures the script runs in the background without needing a terminal open.
 
 ```bash
 mkdir -p ~/.config/systemd/user/
-nvim ~/.config/systemd/user/sober-limit.service
+nvim ~/.config/systemd/user/sr-limit.service
 ```
 
 ```Ini, TOML
@@ -116,7 +98,7 @@ Description=Sober Daily Limit Watchdog
 After=graphical-session.target
 
 [Service]
-ExecStart=%h/sober-watchdog.sh
+ExecStart=%h/sr-watchdog.sh
 Restart=always
 RestartSec=10
 
@@ -139,32 +121,15 @@ Check the status to ensure it's active:
 ```bash
 systemctl --user status sober-limit.service
 ```
+reboot
 
 ---
 
 ### 5. Check Your Usage
 Add this to your shell config (.bashrc or config.fish) for a quick status update:
 
-#### For Fish Shell:
-```fish
-alias sobertime='echo (math -s0 (wc -c < /tmp/sober_usage_(date +%F) 2>/dev/null || echo 0) / 6) "minutes used."'
-```
-
-```fish
-funcsave sobertime
-```
-Now Reboot the PC
-
-#### For Bash Shell:
 ```bash
-alias sobertime='echo "$(( $(wc -c < /tmp/sober_usage_$(date +%F) 2>/dev/null || echo 0) / 6 )) minutes used."'
-```
-
----
-
-## To Check the Remaining Time
-```shell
-sobertime
+watch -n 5 "cat ~/.sober_usage"
 ```
 
 ---
