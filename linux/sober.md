@@ -113,13 +113,13 @@ Enable and start the service:
 
 ```bash
 systemctl --user daemon-reload
-systemctl --user enable --now sober-limit.service
+systemctl --user enable --now sr-limit.service
 ```
 
 Check the status to ensure it's active:
 
 ```bash
-systemctl --user status sober-limit.service
+systemctl --user status sr-limit.service
 ```
 reboot
 
