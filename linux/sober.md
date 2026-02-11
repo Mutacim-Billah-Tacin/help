@@ -126,7 +126,7 @@ reboot
 ---
 
 ### 5. Check Your Usage
-Add this to your shell config (.bashrc or config.fish) for a quick status update:
+Run this for a quick status update:
 
 ```bash
 watch -n 5 "cat ~/.sober_usage"
