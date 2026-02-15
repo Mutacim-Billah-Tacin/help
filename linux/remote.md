@@ -1,3 +1,10 @@
+
+```shell
+
+vncviewer ip : port
+
+```
+
 ```bash
 
 #!/bin/bash
