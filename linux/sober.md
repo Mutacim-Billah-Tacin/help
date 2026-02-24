@@ -137,4 +137,4 @@ watch -n 5 "cat ~/.sober_usage"
 ## 🤝 Contributing
 Feel free to fork this and add more features like weekly limits or GUI trackers.
 
-# Stay sober, stay productive.
+## Stay sober, stay productive.
