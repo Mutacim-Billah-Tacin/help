@@ -5,112 +5,137 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Startpage</title>
     <style>
-        :root {
-            --bg: #1a1b26;
-            --fg: #a9b1d6;
-            --accent: #7aa2f7;
-            --card-bg: #24283b;
-            --search-bg: #1f2335;
-            --border: #414868;
-        }
+    :root {
+        /* Official Catppuccin Mocha Palette */
+        --bg: #1e1e2e;           /* base */
+        --fg: #cdd6f4;           /* text */
+        --accent: #cba6f7;       /* mauve */
+        --card-bg: #181825;      /* mantle */
+        --search-bg: #313244;    /* surface0 */
+        --border: #45475a;       /* surface1 */
+        --subtext: #a6adc8;      /* subtext0 */
+        --overlay: #585b70;      /* surface2 */
+        --hover-accent: #fab387; /* peach for slight variety on hover */
+    }
 
-        body {
-            background-color: var(--bg);
-            color: var(--fg);
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
+    body {
+        background-color: var(--bg);
+        color: var(--fg);
+        /* Using a cleaner font stack */
+        font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+    }
 
-        .search-container {
-            margin-bottom: 50px;
-            width: 100%;
-            max-width: 600px;
-            position: relative;
-        }
+    .search-container {
+        margin-bottom: 50px;
+        width: 100%;
+        max-width: 600px;
+        position: relative;
+    }
 
-        .search-bar {
-            width: 100%;
-            padding: 15px 25px;
-            font-size: 1.2rem;
-            border-radius: 30px;
-            border: 1px solid var(--border);
-            background-color: var(--search-bg);
-            color: var(--fg);
-            outline: none;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
-        }
+    .search-bar {
+        width: 100%;
+        padding: 15px 25px;
+        font-size: 1.1rem;
+        border-radius: 12px; /* Slightly less round for a sharper look */
+        border: 1px solid var(--border);
+        background-color: var(--search-bg);
+        color: var(--fg);
+        outline: none;
+        box-sizing: border-box;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-        .search-bar:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 12px rgba(122, 162, 247, 0.2);
-        }
+    .search-bar:focus {
+        border-color: var(--accent);
+        background-color: var(--card-bg);
+        box-shadow: 0 0 20px rgba(203, 166, 247, 0.2);
+    }
 
-        .suggestions {
-            position: absolute;
-            top: 110%;
-            left: 0;
-            right: 0;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            list-style: none;
-            padding: 8px 0;
-            margin: 0;
-            display: none;
-            z-index: 1000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+    /* Suggestions Box */
+    .suggestions {
+        position: absolute;
+        top: 115%;
+        left: 0;
+        right: 0;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        list-style: none;
+        padding: 8px 0;
+        margin: 0;
+        display: none;
+        z-index: 1000;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+    }
 
-        .suggestions li {
-            padding: 12px 25px;
-            cursor: pointer;
-            color: var(--fg);
-            transition: background 0.1s;
-        }
+    .suggestions li {
+        padding: 12px 25px;
+        cursor: pointer;
+        color: var(--subtext);
+        transition: all 0.2s ease;
+    }
 
-        /* Styling for the selected item via keyboard or hover */
-        .suggestions li.selected, .suggestions li:hover {
-            background: #2e3440;
-            color: var(--accent);
-        }
+    .suggestions li.selected, .suggestions li:hover {
+        background: var(--overlay);
+        color: var(--accent);
+        padding-left: 30px; /* Slide effect */
+    }
 
-        .container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            width: 80%;
-            max-width: 900px;
-        }
+    /* Links Container */
+    .container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        width: 85%;
+        max-width: 950px;
+    }
 
-        .section {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
+    .section {
+        background: var(--card-bg);
+        padding: 25px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
 
-        h2 {
-            color: var(--accent);
-            font-size: 0.85rem;
-            margin-top: 0;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
+    .section:hover {
+        border-color: var(--overlay);
+        transform: translateY(-5px);
+    }
 
-        ul { list-style: none; padding: 0; margin: 0; }
-        li { margin: 10px 0; }
-        a { color: var(--fg); text-decoration: none; transition: 0.2s; display: block; }
-        a:hover { color: var(--accent); }
-    </style>
+    h2 {
+        color: var(--accent);
+        font-size: 0.75rem;
+        margin-top: 0;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 2.5px;
+        opacity: 0.8;
+    }
+
+    ul { list-style: none; padding: 0; margin: 0; }
+    li { margin: 12px 0; }
+    
+    a { 
+        color: var(--subtext); 
+        text-decoration: none; 
+        transition: all 0.2s ease; 
+        display: inline-block; 
+    }
+
+    a:hover { 
+        color: var(--hover-accent); 
+        transform: translateX(4px); 
+    }
+</style>
 </head>
 <body>
 
