@@ -33,6 +33,7 @@
 
         .header { text-align: center; margin-bottom: 25px; }
 
+        /* TIME GLOW RESTORED */
         #clock { 
             font-size: 9rem; 
             font-weight: 800; 
@@ -42,22 +43,18 @@
             text-shadow: 0 0 20px rgba(203, 166, 247, 0.4), 0 0 40px rgba(203, 166, 247, 0.2);
         }
 
-        /* Support Me Link Styling */
         .support-link { 
             display: block;
             font-size: 0.9rem; 
             color: var(--subtext); 
             text-transform: uppercase; 
             letter-spacing: 5px; 
-            margin-top: 15px; 
+            margin-top: 10px; 
             font-weight: 600; 
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: 0.3s;
         }
-        
-        .support-link:hover {
-            color: var(--peach);
-        }
+        .support-link:hover { color: var(--peach); text-shadow: 0 0 10px var(--peach); }
 
         .search-container {
             width: 100%;
@@ -77,45 +74,24 @@
             text-align: center;
             outline: none;
             box-sizing: border-box;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Fix: Proper placeholder behavior */
-        .search-bar::placeholder {
-            color: var(--subtext);
-            opacity: 1;
-            transition: opacity 0.2s ease;
+        /* SEARCH ANIMATION FIX */
+        .search-bar::placeholder { 
+            color: var(--subtext); 
+            transition: opacity 0.2s ease, transform 0.2s ease; 
         }
-
-        .search-bar:focus::placeholder {
-            opacity: 0;
+        .search-bar:focus::placeholder { 
+            opacity: 0; 
+            transform: translateY(-5px); 
         }
 
         .search-bar:focus {
             background-color: var(--card-bg);
             border-color: var(--accent);
-            box-shadow: 0 0 15px rgba(203, 166, 247, 0.2);
+            box-shadow: 0 0 20px rgba(203, 166, 247, 0.25);
         }
-
-        .suggestions {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background: var(--card-bg);
-            border: 1px solid var(--accent);
-            border-top: none;
-            border-radius: 0 0 12px 12px;
-            list-style: none;
-            padding: 5px 0;
-            margin: 0;
-            display: none;
-            z-index: 1000;
-            box-sizing: border-box;
-        }
-
-        .suggestions li { padding: 12px 25px; cursor: pointer; color: var(--subtext); text-align: left; }
-        .suggestions li:hover { background: var(--overlay); color: var(--accent); }
 
         .container {
             display: grid;
@@ -133,6 +109,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            transition: 0.3s;
         }
 
         .section-header {
@@ -144,22 +121,55 @@
             text-transform: uppercase;
         }
 
+        /* SCROLLABLE COMPACT LISTS */
         .shortcut-list {
             padding: 15px;
-            overflow-y: auto;
-            max-height: 380px;
             display: flex;
             flex-direction: column;
             gap: 10px;
+            max-height: 350px; 
+            overflow-y: auto;
         }
 
         .shortcut-list::-webkit-scrollbar { width: 4px; }
         .shortcut-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
-        .box { background-color: var(--box-bg); border-radius: 8px; transition: 0.3s; }
-        .box a { color: var(--fg); text-decoration: none; display: block; padding: 12px; text-align: center; }
-        .box:hover { background-color: var(--peach); transform: scale(1.02); }
+        .box { background-color: var(--box-bg); border-radius: 8px; transition: 0.2s; }
+        .box a { 
+            color: var(--fg); 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            padding: 12px; 
+            gap: 15px; 
+        }
+        
+        .box img { 
+            width: 20px; 
+            height: 20px; 
+            border-radius: 4px; 
+            filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+        }
+
+        .box:hover { background-color: var(--peach); transform: scale(1.03); }
         .box:hover a { color: var(--bg); font-weight: 700; }
+
+        .suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--accent);
+            border-radius: 0 0 12px 12px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: none;
+            z-index: 1000;
+        }
+        .suggestions li { padding: 12px; cursor: pointer; color: var(--subtext); text-align: left; }
+        .suggestions li:hover { background: var(--overlay); color: var(--accent); }
     </style>
 </head>
 <body onload="init()">
@@ -177,55 +187,70 @@
         </form>
     </div>
 
-    <div class="container">
-        <div class="section">
-            <div class="section-header">Daily</div>
-            <div class="shortcut-list">
-                <div class="box"><a href="https://gmail.com">Gmail</a></div>
-                <div class="box"><a href="https://keybr.com">Keybr</a></div>
-                <div class="box"><a href="https://youtube.com">YouTube</a></div>
-                <div class="box"><a href="https://app.fizzy.do">Fizzy</a></div>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-header">Social</div>
-            <div class="shortcut-list">
-                <div class="box"><a href="https://discord.com">Discord</a></div>
-                <div class="box"><a href="https://messenger.com">Messenger</a></div>
-                <div class="box"><a href="https://reddit.com">Reddit</a></div>
-                <div class="box"><a href="https://web.whatsapp.com/">WhatsApp</a></div>
-                <div class="box"><a href="https://x.com">X</a></div>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-header">Tools</div>
-            <div class="shortcut-list">
-                <div class="box"><a href="https://chatgpt.com">ChatGPT</a></div>
-                <div class="box"><a href="https://www.figma.com">Figma</a></div>
-                <div class="box"><a href="https://gemini.google.com">Gemini</a></div>
-                <div class="box"><a href="https://github.com">GitHub</a></div>
-                <div class="box"><a href="http://192.168.0.1">Router</a></div>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-header">Leisure</div>
-            <div class="shortcut-list">
-                <div class="box"><a href="https://open.spotify.com">Spotify</a></div>
-                <div class="box"><a href="https://comick.io">Comick</a></div>
-                <div class="box"><a href="https://comix.to">Comix</a></div>
-            </div>
-        </div>
-    </div>
+    <div class="container" id="main-container"></div>
 
     <script>
+        // EDIT YOUR SHORTCUTS HERE - Logos will generate automatically
+        const categories = {
+            "Daily": [
+                { name: "Gmail", url: "https://gmail.com" },
+                { name: "Keybr", url: "https://keybr.com" },
+                { name: "YouTube", url: "https://youtube.com" },
+                { name: "Fizzy", url: "https://fizzy.com" }
+            ],
+            "Social": [
+                { name: "Discord", url: "https://discord.com" },
+                { name: "Messenger", url: "https://messenger.com" },
+                { name: "Reddit", url: "https://reddit.com" },
+                { name: "WhatsApp", url: "https://web.whatsapp.com" },
+                { name: "X", url: "https://x.com" }
+            ],
+            "Tools": [
+                { name: "ChatGPT", url: "https://chatgpt.com" },
+                { name: "Figma", url: "https://figma.com" },
+                { name: "Gemini", url: "https://gemini.google.com" },
+                { name: "GitHub", url: "https://github.com" },
+                { name: "Router", url: "http://192.168.0.1" }
+            ],
+            "Leisure": [
+                { name: "Spotify", url: "https://open.spotify.com" },
+                { name: "Comick", url: "https://comick.io" },
+                { name: "Comix", url: "https://comix.to" }
+            ]
+        };
+
+        function buildGrid() {
+            const container = document.getElementById('main-container');
+            for (const [title, items] of Object.entries(categories)) {
+                const section = document.createElement('div');
+                section.className = 'section';
+                section.innerHTML = `
+                    <div class="section-header">${title}</div>
+                    <div class="shortcut-list">
+                        ${items.map(item => {
+                            const urlObj = new URL(item.url.startsWith('http') ? item.url : `https://${item.url}`);
+                            const logoUrl = `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=64`;
+                            return `
+                                <div class="box">
+                                    <a href="${item.url}">
+                                        <img src="${logoUrl}" onerror="this.src='https://www.google.com/s2/favicons?domain=google.com&sz=64'">
+                                        ${item.name}
+                                    </a>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                container.appendChild(section);
+            }
+        }
+
         const input = document.getElementById('search-input');
         const box = document.getElementById('suggestions-box');
         const form = document.getElementById('search-form');
 
         function init() {
+            buildGrid();
             updateClock();
             setInterval(updateClock, 1000);
             input.focus();
@@ -245,42 +270,27 @@
             if (results && results.length > 0) {
                 box.style.display = 'block';
                 input.style.borderRadius = "12px 12px 0 0";
-                results.slice(0, 8).forEach(item => {
+                results.slice(0, 6).forEach(item => {
                     const li = document.createElement('li');
                     li.textContent = item;
                     li.onclick = () => { input.value = item; form.submit(); };
                     box.appendChild(li);
                 });
-            } else {
-                hideSuggestions();
-            }
+            } else { hideSuggestions(); }
         };
 
-        function hideSuggestions() {
-            box.style.display = 'none';
-            input.style.borderRadius = "12px";
-        }
+        function hideSuggestions() { box.style.display = 'none'; input.style.borderRadius = "12px"; }
 
         input.addEventListener('input', () => {
             const query = input.value.trim();
             if (query.length > 0) {
-                const oldScript = document.getElementById('suggest-script');
-                if (oldScript) oldScript.remove();
-
                 const script = document.createElement('script');
-                script.id = 'suggest-script';
                 script.src = `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}&callback=handleSuggestions`;
                 document.head.appendChild(script);
-            } else {
-                hideSuggestions();
-            }
+            } else { hideSuggestions(); }
         });
 
-        document.addEventListener('click', (e) => {
-            if (!input.contains(e.target) && !box.contains(e.target)) {
-                hideSuggestions();
-            }
-        });
+        document.addEventListener('click', (e) => { if (!input.contains(e.target)) hideSuggestions(); });
     </script>
 </body>
 </html>
