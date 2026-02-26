@@ -5,260 +5,328 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Startpage</title>
     <style>
-    :root {
-        /* Official Catppuccin Mocha Palette */
-        --bg: #1e1e2e;           /* base */
-        --fg: #cdd6f4;           /* text */
-        --accent: #cba6f7;       /* mauve */
-        --card-bg: #181825;      /* mantle */
-        --search-bg: #313244;    /* surface0 */
-        --border: #45475a;       /* surface1 */
-        --subtext: #a6adc8;      /* subtext0 */
-        --overlay: #585b70;      /* surface2 */
-        --hover-accent: #fab387; /* peach for slight variety on hover */
-    }
+        :root {
+            /* Official Catppuccin Mocha Palette */
+            --bg: #1e1e2e;           /* base */
+            --fg: #cdd6f4;           /* text */
+            --accent: #cba6f7;       /* mauve */
+            --card-bg: #181825;      /* mantle */
+            --search-bg: #313244;    /* surface0 */
+            --border: #45475a;       /* surface1 */
+            --subtext: #a6adc8;      /* subtext0 */
+            --overlay: #585b70;      /* surface2 */
+        }
 
-    body {
-        background-color: var(--bg);
-        color: var(--fg);
-        /* Using a cleaner font stack */
-        font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        margin: 0;
-        overflow: hidden;
-    }
+        body {
+            background-color: var(--bg);
+            color: var(--fg);
+            font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
 
-    .search-container {
-        margin-bottom: 50px;
-        width: 100%;
-        max-width: 600px;
-        position: relative;
-    }
+        /* Clock & Location Header */
+        .header-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
 
-    .search-bar {
-        width: 100%;
-        padding: 15px 25px;
-        font-size: 1.1rem;
-        border-radius: 12px; /* Slightly less round for a sharper look */
-        border: 1px solid var(--border);
-        background-color: var(--search-bg);
-        color: var(--fg);
-        outline: none;
-        box-sizing: border-box;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+        #clock {
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0;
+            letter-spacing: -2px;
+            text-shadow: 0 0 25px rgba(203, 166, 247, 0.25);
+            line-height: 1;
+        }
 
-    .search-bar:focus {
-        border-color: var(--accent);
-        background-color: var(--card-bg);
-        box-shadow: 0 0 20px rgba(203, 166, 247, 0.2);
-    }
+        #location {
+            font-size: 0.9rem;
+            color: var(--subtext);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-top: 10px;
+            font-weight: 500;
+        }
 
-    /* Suggestions Box */
-    .suggestions {
-        position: absolute;
-        top: 115%;
-        left: 0;
-        right: 0;
-        background: var(--card-bg);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        list-style: none;
-        padding: 8px 0;
-        margin: 0;
-        display: none;
-        z-index: 1000;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.7);
-    }
+        /* Search Bar Section */
+        .search-container {
+            margin-bottom: 60px;
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
 
-    .suggestions li {
-        padding: 12px 25px;
-        cursor: pointer;
-        color: var(--subtext);
-        transition: all 0.2s ease;
-    }
+        .search-bar {
+            width: 100%;
+            padding: 18px 28px;
+            font-size: 1.1rem;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background-color: var(--search-bg);
+            color: var(--fg);
+            outline: none;
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-    .suggestions li.selected, .suggestions li:hover {
-        background: var(--overlay);
-        color: var(--accent);
-        padding-left: 30px; /* Slide effect */
-    }
+        .search-bar:focus {
+            border-color: var(--accent);
+            background-color: var(--card-bg);
+            box-shadow: 0 0 20px rgba(203, 166, 247, 0.15);
+        }
 
-    /* Links Container */
-    .container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 25px;
-        width: 85%;
-        max-width: 950px;
-    }
+        /* Search Suggestions */
+        .suggestions {
+            position: absolute;
+            top: 115%;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            list-style: none;
+            padding: 10px 0;
+            margin: 0;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        }
 
-    .section {
-        background: var(--card-bg);
-        padding: 25px;
-        border-radius: 16px;
-        border: 1px solid var(--border);
-        transition: transform 0.2s ease, border-color 0.2s ease;
-    }
+        .suggestions li {
+            padding: 12px 25px;
+            cursor: pointer;
+            color: var(--subtext);
+            transition: all 0.2s ease;
+        }
 
-    .section:hover {
-        border-color: var(--overlay);
-        transform: translateY(-5px);
-    }
+        .suggestions li.selected, .suggestions li:hover {
+            background: var(--overlay);
+            color: var(--accent);
+            padding-left: 30px;
+        }
 
-    h2 {
-        color: var(--accent);
-        font-size: 0.75rem;
-        margin-top: 0;
-        border-bottom: 1px solid var(--border);
-        padding-bottom: 12px;
-        text-transform: uppercase;
-        letter-spacing: 2.5px;
-        opacity: 0.8;
-    }
+        /* Links Grid */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            width: 85%;
+            max-width: 950px;
+        }
 
-    ul { list-style: none; padding: 0; margin: 0; }
-    li { margin: 12px 0; }
-    
-    a { 
-        color: var(--subtext); 
-        text-decoration: none; 
-        transition: all 0.2s ease; 
-        display: inline-block; 
-    }
+        .section {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease;
+        }
 
-    a:hover { 
-        color: var(--hover-accent); 
-        transform: translateX(4px); 
-    }
-</style>
-</head>
-<body>
+        .section:hover {
+            transform: translateY(-5px);
+            border-color: var(--overlay);
+        }
 
-<div class="search-container">
-    <form action="https://www.google.com/search" method="get" id="search-form">
-        <input type="text" name="q" id="search-input" class="search-bar" placeholder="Search Google..." autofocus autocomplete="off">
-        <ul id="suggestions-box" class="suggestions"></ul>
-    </form>
-</div>
+        h2 {
+            color: var(--accent);
+            font-size: 0.75rem;
+            margin-top: 0;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            opacity: 0.8;
+        }
 
-<div class="container">
-    <div class="section">
-        <h2>Daily</h2>
-        <ul>
-            <li><a href="https://gmail.com">Gmail</a></li>
-            <li><a href="https://youtube.com">YouTube</a></li>
-            <li><a href="https://www.keybr.com/">Keybr</a></li>
-        </ul>
-    </div>
-    <div class="section">
-        <h2>Social</h2>
-        <ul>
-            <li><a href="https://reddit.com">Reddit</a></li>
-            <li><a href="https://x.com">X</a></li>
-            <li><a href="https://discord.com">Discord</a></li>
-            <li><a href="https://www.facebook.com/messages/">Messenger</a></li>
-            <li><a href="https://web.whatsapp.com/">WhstsApp</a></li>
-        </ul>
-    </div>
-    <div class="section">
-        <h2>Tools</h2>
-        <ul>
-            <li><a href="https://chatgpt.com">ChatGPT</a></li>
-            <li><a href="https://github.com">GitHub</a></li>
-            <li><a href="https://gemini.google.com">Gemini</a></li>
-            <li><a href="http://192.168.0.1">Router</a></li>
-        </ul>
-    </div>
-</div>
-
-<script>
-    const input = document.getElementById('search-input');
-    const box = document.getElementById('suggestions-box');
-    const form = document.getElementById('search-form');
-    let selectedIndex = -1;
-
-    window.handleSuggestions = function(data) {
-        const results = data[1];
-        box.innerHTML = '';
-        selectedIndex = -1; // Reset selection index when new suggestions arrive
+        ul { list-style: none; padding: 0; margin: 0; }
+        li { margin: 12px 0; }
         
-        if (results && results.length > 0) {
-            box.style.display = 'block';
-            results.slice(0, 8).forEach((item, index) => {
-                // FIX: If item is an array (chrome/youtube client), take index 0. 
-                // Then split by comma just in case Firefox client adds metadata strings.
-                const rawText = Array.isArray(item) ? item[0] : item;
-                const cleanText = rawText.split(',')[0];
-
-                const li = document.createElement('li');
-                li.textContent = cleanText;
-                li.onclick = () => {
-                    input.value = cleanText;
-                    form.submit();
-                };
-                box.appendChild(li);
-            });
-        } else {
-            box.style.display = 'none';
+        a { 
+            color: var(--subtext); 
+            text-decoration: none; 
+            transition: all 0.2s ease; 
+            display: block; 
         }
-    };
-
-    input.addEventListener('input', () => {
-        const query = input.value.trim();
-        if (query.length > 0) {
-            const oldScript = document.getElementById('suggest-script');
-            if (oldScript) oldScript.remove();
-
-            const script = document.createElement('script');
-            script.id = 'suggest-script';
-            // client=firefox is used because it typically sends cleaner data
-            script.src = `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}&callback=handleSuggestions`;
-            document.head.appendChild(script);
-        } else {
-            box.style.display = 'none';
+        
+        a:hover { 
+            color: var(--accent); 
+            padding-left: 6px; 
         }
-    });
+    </style>
+</head>
+<body onload="init()">
 
-    // KEYBOARD NAVIGATION: Up, Down, and Enter
-    input.addEventListener('keydown', (e) => {
-        const items = box.querySelectorAll('li');
-        if (items.length === 0) return;
+    <div class="header-container">
+        <div id="clock">--:-- --</div>
+        <div id="location">Detecting Location...</div>
+    </div>
 
-        if (e.key === 'ArrowDown') {
-            e.preventDefault(); // Stop cursor from moving in input
-            selectedIndex = (selectedIndex + 1) % items.length;
-            highlightItem(items);
-        } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            selectedIndex = (selectedIndex - 1 + items.length) % items.length;
-            highlightItem(items);
-        } else if (e.key === 'Enter' && selectedIndex > -1) {
-            e.preventDefault();
-            input.value = items[selectedIndex].textContent;
-            form.submit();
+    <div class="search-container">
+        <form action="https://www.google.com/search" method="get" id="search-form">
+            <input type="text" name="q" id="search-input" class="search-bar" placeholder="Search Google..." autofocus autocomplete="off">
+            <ul id="suggestions-box" class="suggestions"></ul>
+        </form>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <h2>Daily</h2>
+            <ul>
+                <li><a href="https://gmail.com">Gmail</a></li>
+                <li><a href="https://youtube.com">YouTube</a></li>
+                <li><a href="https://www.keybr.com/">Keybr</a></li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Social</h2>
+            <ul>
+                <li><a href="https://reddit.com">Reddit</a></li>
+                <li><a href="https://x.com">X</a></li>
+                <li><a href="https://discord.com">Discord</a></li>
+                <li><a href="https://www.facebook.com/messages/">Messenger</a></li>
+                <li><a href="https://web.whatsapp.com/">WhatsApp</a></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Tools</h2>
+            <ul>
+                <li><a href="https://chatgpt.com">ChatGPT</a></li>
+                <li><a href="https://github.com">GitHub</a></li>
+                <li><a href="https://gemini.google.com">Gemini</a></li>
+                <li><a href="http://192.168.0.1">Router</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function init() {
+            // Start clock immediately
+            updateClock();
+            setInterval(updateClock, 1000);
+            
+            // Get location
+            getLocation();
         }
-    });
 
-    function highlightItem(items) {
-        items.forEach((li, index) => {
-            if (index === selectedIndex) {
-                li.classList.add('selected');
-                input.value = li.textContent; // Optional: Sync input with selected item
+        // 12-Hour Clock with AM/PM
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            
+            hours = hours % 12;
+            hours = hours ? hours : 12; // Handle midnight (0) as 12
+            
+            const timeString = `${hours}:${minutes} ${ampm}`;
+            document.getElementById('clock').textContent = timeString;
+        }
+
+        // Auto-detect Location with fallback
+        function getLocation() {
+            fetch('https://ipapi.co/json/')
+                .then(response => {
+                    if (!response.ok) throw new Error();
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('location').textContent = `${data.city}, ${data.country_name}`;
+                })
+                .catch(() => {
+                    // Fallback to your primary location if API is blocked
+                    document.getElementById('location').textContent = "Tongi, Bangladesh";
+                });
+        }
+
+        // Search Suggestion Logic
+        const input = document.getElementById('search-input');
+        const box = document.getElementById('suggestions-box');
+        const form = document.getElementById('search-form');
+        let selectedIndex = -1;
+
+        window.handleSuggestions = function(data) {
+            const results = data[1];
+            box.innerHTML = '';
+            selectedIndex = -1; 
+            
+            if (results && results.length > 0) {
+                box.style.display = 'block';
+                results.slice(0, 8).forEach((item, index) => {
+                    const rawText = Array.isArray(item) ? item[0] : item;
+                    const cleanText = rawText.split(',')[0];
+
+                    const li = document.createElement('li');
+                    li.textContent = cleanText;
+                    li.onclick = () => {
+                        input.value = cleanText;
+                        form.submit();
+                    };
+                    box.appendChild(li);
+                });
             } else {
-                li.classList.remove('selected');
+                box.style.display = 'none';
+            }
+        };
+
+        input.addEventListener('input', () => {
+            const query = input.value.trim();
+            if (query.length > 0) {
+                const oldScript = document.getElementById('suggest-script');
+                if (oldScript) oldScript.remove();
+
+                const script = document.createElement('script');
+                script.id = 'suggest-script';
+                script.src = `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}&callback=handleSuggestions`;
+                document.head.appendChild(script);
+            } else {
+                box.style.display = 'none';
             }
         });
-    }
 
-    document.addEventListener('click', (e) => {
-        if (!input.contains(e.target)) box.style.display = 'none';
-    });
-</script>
+        // Keyboard Navigation for Suggestions
+        input.addEventListener('keydown', (e) => {
+            const items = box.querySelectorAll('li');
+            if (items.length === 0) return;
 
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedIndex = (selectedIndex + 1) % items.length;
+                highlightItem(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+                highlightItem(items);
+            } else if (e.key === 'Enter' && selectedIndex > -1) {
+                e.preventDefault();
+                input.value = items[selectedIndex].textContent;
+                form.submit();
+            }
+        });
+
+        function highlightItem(items) {
+            items.forEach((li, index) => {
+                if (index === selectedIndex) {
+                    li.classList.add('selected');
+                    input.value = li.textContent; 
+                } else {
+                    li.classList.remove('selected');
+                }
+            });
+        }
+
+        // Hide suggestions when clicking away
+        document.addEventListener('click', (e) => {
+            if (!input.contains(e.target)) box.style.display = 'none';
+        });
+    </script>
 </body>
 </html>
