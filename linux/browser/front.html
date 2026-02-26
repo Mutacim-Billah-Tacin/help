@@ -18,23 +18,21 @@
             --ash: #313244; 
         }
 
-        /* FULL CENTERING FIX */
         body {
             background-color: var(--bg);
             color: var(--fg);
             font-family: 'Inter', 'Segoe UI', sans-serif;
             display: flex;
             flex-direction: column;
-            align-it big/glowy clocems: center;
-            justify-content: center; /* This pulls everything to the dead center */
-            height: 100vh; /* Uses full screen height */
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
             margin: 0;
             overflow: hidden;
         }
 
         .header { text-align: center; margin-bottom: 25px; }
 
-        /* BIGGER & GLOWIER CLOCK */
         #clock { 
             font-size: 9rem; 
             font-weight: 800; 
@@ -44,7 +42,22 @@
             text-shadow: 0 0 20px rgba(203, 166, 247, 0.4), 0 0 40px rgba(203, 166, 247, 0.2);
         }
 
-        #timezone-name { font-size: 0.9rem; color: var(--subtext); text-transform: uppercase; letter-spacing: 5px; margin-top: 10px; font-weight: 600; }
+        /* Support Me Link Styling */
+        .support-link { 
+            display: block;
+            font-size: 0.9rem; 
+            color: var(--subtext); 
+            text-transform: uppercase; 
+            letter-spacing: 5px; 
+            margin-top: 15px; 
+            font-weight: 600; 
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .support-link:hover {
+            color: var(--peach);
+        }
 
         .search-container {
             width: 100%;
@@ -59,22 +72,30 @@
             font-size: 1.1rem;
             border-radius: 12px;
             border: 1px solid var(--border);
-            background-color: var(--ash); /* Your ash color */
-            color: var(--subtext);
+            background-color: var(--ash);
+            color: var(--fg);
             text-align: center;
             outline: none;
             box-sizing: border-box;
             transition: all 0.3s ease;
         }
 
+        /* Fix: Proper placeholder behavior */
+        .search-bar::placeholder {
+            color: var(--subtext);
+            opacity: 1;
+            transition: opacity 0.2s ease;
+        }
+
+        .search-bar:focus::placeholder {
+            opacity: 0;
+        }
+
         .search-bar:focus {
             background-color: var(--card-bg);
-            color: var(--fg);
             border-color: var(--accent);
             box-shadow: 0 0 15px rgba(203, 166, 247, 0.2);
         }
-
-        .search-bar:focus::placeholder { color: transparent; }
 
         .suggestions {
             position: absolute;
@@ -96,14 +117,13 @@
         .suggestions li { padding: 12px 25px; cursor: pointer; color: var(--subtext); text-align: left; }
         .suggestions li:hover { background: var(--overlay); color: var(--accent); }
 
-        /* AUTO-EXPAND GRID */
         .container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
             width: 95%;
             max-width: 1200px;
-            align-items: start; /* Lets them grow independently */
+            align-items: start;
         }
 
         .section {
@@ -124,11 +144,10 @@
             text-transform: uppercase;
         }
 
-        /* AUTO-LIMIT & SCROLLBAR */
         .shortcut-list {
             padding: 15px;
             overflow-y: auto;
-            max-height: 380px; /* Adjust this to change when scrolling starts */
+            max-height: 380px;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -147,7 +166,7 @@
 
     <div class="header">
         <div id="clock">--:-- --</div>
-        <div id="timezone-name">Local Time</div>
+        <a href="https://github.com/Mutacim-Billah-Tacin" target="_blank" class="support-link">Support Me</a>
     </div>
 
     <div class="search-container">
@@ -165,6 +184,7 @@
                 <div class="box"><a href="https://gmail.com">Gmail</a></div>
                 <div class="box"><a href="https://keybr.com">Keybr</a></div>
                 <div class="box"><a href="https://youtube.com">YouTube</a></div>
+                <div class="box"><a href="https://app.fizzy.do">Fizzy</a></div>
             </div>
         </div>
 
@@ -174,7 +194,7 @@
                 <div class="box"><a href="https://discord.com">Discord</a></div>
                 <div class="box"><a href="https://messenger.com">Messenger</a></div>
                 <div class="box"><a href="https://reddit.com">Reddit</a></div>
-                <div><a href="https://web.whatsapp.com/">WhatsApp</a></div>
+                <div class="box"><a href="https://web.whatsapp.com/">WhatsApp</a></div>
                 <div class="box"><a href="https://x.com">X</a></div>
             </div>
         </div>
@@ -191,10 +211,10 @@
         </div>
 
         <div class="section">
-            <div class="section-header">Trash</div>
+            <div class="section-header">Leisure</div>
             <div class="shortcut-list">
                 <div class="box"><a href="https://open.spotify.com">Spotify</a></div>
-                <div class="box"><a href="https://comick.dev">Comick</a></div>
+                <div class="box"><a href="https://comick.io">Comick</a></div>
                 <div class="box"><a href="https://comix.to">Comix</a></div>
             </div>
         </div>
@@ -208,8 +228,7 @@
         function init() {
             updateClock();
             setInterval(updateClock, 1000);
-            displayLocationName();
-            input.addEventListener('focus', () => { input.value = ''; box.style.display = 'none'; });
+            input.focus();
         }
 
         function updateClock() {
@@ -218,16 +237,6 @@
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const ampm = now.getHours() >= 12 ? 'PM' : 'AM';
             document.getElementById('clock').textContent = `${hours}:${minutes} ${ampm}`;
-        }
-
-        function displayLocationName() {
-            try {
-                const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                const city = tz.split('/').pop().replace('_', ' '); 
-                document.getElementById('timezone-name').textContent = city;
-            } catch (e) {
-                document.getElementById('timezone-name').textContent = "Dhaka";
-            }
         }
 
         window.handleSuggestions = function(data) {
@@ -242,25 +251,34 @@
                     li.onclick = () => { input.value = item; form.submit(); };
                     box.appendChild(li);
                 });
-            } else { 
-                box.style.display = 'none';
-                input.style.borderRadius = "12px";
+            } else {
+                hideSuggestions();
             }
         };
+
+        function hideSuggestions() {
+            box.style.display = 'none';
+            input.style.borderRadius = "12px";
+        }
 
         input.addEventListener('input', () => {
             const query = input.value.trim();
             if (query.length > 0) {
+                const oldScript = document.getElementById('suggest-script');
+                if (oldScript) oldScript.remove();
+
                 const script = document.createElement('script');
+                script.id = 'suggest-script';
                 script.src = `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}&callback=handleSuggestions`;
                 document.head.appendChild(script);
-            } else { box.style.display = 'none'; input.style.borderRadius = "12px"; }
+            } else {
+                hideSuggestions();
+            }
         });
 
         document.addEventListener('click', (e) => {
-            if (!input.contains(e.target)) {
-                box.style.display = 'none';
-                input.style.borderRadius = "12px";
+            if (!input.contains(e.target) && !box.contains(e.target)) {
+                hideSuggestions();
             }
         });
     </script>
