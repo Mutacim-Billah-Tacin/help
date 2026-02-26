@@ -221,6 +221,8 @@
 
         function buildGrid() {
             const container = document.getElementById('main-container');
+            container.innerHTML = ''; // Clear existing content
+            
             for (const [title, items] of Object.entries(categories)) {
                 const section = document.createElement('div');
                 section.className = 'section';
@@ -228,8 +230,20 @@
                     <div class="section-header">${title}</div>
                     <div class="shortcut-list">
                         ${items.map(item => {
+                            // Standardize URL for processing
                             const urlObj = new URL(item.url.startsWith('http') ? item.url : `https://${item.url}`);
-                            const logoUrl = `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=64`;
+                            let hostname = urlObj.hostname;
+
+                            // UNIVERSAL FIX: Strip subdomains so the API hits the root domain (e.g., whatsapp.com instead of web.whatsapp.com)
+                            const logoDomain = hostname.replace(/^(web|app|www|m|mobile)\./, '');
+
+                            // LOCAL FIX: Check if it's an internal IP/Localhost (since Google API can't reach your home network)
+                            const isInternal = /^(127|192|10|172)\./.test(hostname) || hostname === 'localhost';
+                            
+                            const logoUrl = isInternal 
+                                ? `https://www.google.com/s2/favicons?domain=google.com&sz=64` 
+                                : `https://www.google.com/s2/favicons?domain=${logoDomain}&sz=64`;
+
                             return `
                                 <div class="box">
                                     <a href="${item.url}">
@@ -244,7 +258,7 @@
                 container.appendChild(section);
             }
         }
-
+        
         const input = document.getElementById('search-input');
         const box = document.getElementById('suggestions-box');
         const form = document.getElementById('search-form');
