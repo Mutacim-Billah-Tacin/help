@@ -1,0 +1,15 @@
+Icon = 'applications-internet'
+NamePretty = ''
+MinScore = 20
+HideFromProviderlist = false
+History = true
+HistoryWhenEmpty = false
+EnginesAsActions = false
+AlwaysShowDefault = true
+TextPrefix = 'Search: '
+Command = 'xdg-open'
+
+[[entries]]
+default = true
+name = "AI"
+url = "https://www.google.com/search?udm=50&q=%TERM%"
