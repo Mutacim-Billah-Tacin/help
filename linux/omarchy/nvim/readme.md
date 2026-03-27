@@ -1,2 +1,2 @@
 ### nvim Mason tools
-![lsp-mason](mason.png)
+![lsp-mason](Mason.png)
