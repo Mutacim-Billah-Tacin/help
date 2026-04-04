@@ -12,8 +12,8 @@
   'use strict';
 
   // ─── CONFIG ───────────────────────────────────────────
-  const INTERVAL_MS   = 4000;   // W every 4 seconds
-  const TOTAL_MS      = 20000;  // End after 20 seconds
+  const INTERVAL_MS   = 30 * 60 * 1000;   // W every 30 min
+  const TOTAL_MS      = 5 * 60 * 60 * 1000;  // End after 5 hour
   // ──────────────────────────────────────────────────────
 
   function getInputBox() {
