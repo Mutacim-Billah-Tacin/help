@@ -15,11 +15,13 @@
 3.  **Enable and start the service**:
     
 ```bash
+    sn /etc/systemd/system/qbittorrent-nox.service
     sudo systemctl daemon-reload
     sudo systemctl enable --now qbittorrent-nox
-    ```
+```
 
 ### 3. Verify the Status
 You can now check if it's running correctly using the alias you likely have or by running:
 ```bash
 systemctl status qbittorrent-nox
+```
