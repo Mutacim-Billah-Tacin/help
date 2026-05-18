@@ -1,3 +1,4 @@
+```service
 [Unit]
 Description=qBittorrent-nox service
 After=network.target mnt-nos.mount mnt-backup.mount
@@ -14,7 +15,7 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 
-3.  **Enable and start the service**:
+**Enable and start the service**:
     
 ```bash
 sn /etc/systemd/system/qbittorrent-nox.service
@@ -22,8 +23,12 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now qbittorrent-nox
 ```
 
-### 3. Verify the Status
+### Verify the Status
 You can now check if it's running correctly using the alias you likely have or by running:
 ```bash
 systemctl status qbittorrent-nox
+```
+## restart
+```bash
+systemctl restart qbittorrent-nox
 ```
