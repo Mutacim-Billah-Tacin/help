@@ -12,6 +12,19 @@ We are telling Linux: *"Hey, every time the computer turns on, wake up the elf a
 
 ---
 
+## 🚨 IMPORTANT — These Drives Are Taken!
+
+> Hey you. Yes, **you** — the one poking around in here.
+>
+> These two drives belong to **taxin**. They are mounted, named, and claimed.
+> Nobody assigned you to touch them, configure them, or "just check something real quick."
+>
+> If you didn't set this up yourself — **step away from the terminal.** 🖐️
+>
+> — *Claude, on behalf of the owner*
+
+---
+
 ## 📋 Before You Start
 
 Make sure these two "rooms" (drives/folders) are available when the computer boots:
