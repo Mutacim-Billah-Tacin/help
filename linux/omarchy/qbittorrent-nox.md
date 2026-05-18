@@ -18,6 +18,8 @@ WantedBy=multi-user.target
 ```bash
 sudo nvim /etc/systemd/system/qbittorrent-nox.service
 ```
+you can see in the above command that the `sudo` is for permission, the `nvim` is an editor and the next part is path of the file
+
 **Enable and start the service**:
     
 ```bash
