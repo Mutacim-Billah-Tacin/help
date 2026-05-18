@@ -18,7 +18,7 @@ WantedBy=multi-user.target
 **Enable and start the service**:
     
 ```bash
-sn /etc/systemd/system/qbittorrent-nox.service
+sudo nvim /etc/systemd/system/qbittorrent-nox.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now qbittorrent-nox
 ```
