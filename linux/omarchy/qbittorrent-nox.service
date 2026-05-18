@@ -1,6 +1,8 @@
 [Unit]
 Description=qBittorrent-nox service
-After=network.target
+After=network.target mnt-nos.mount mnt-backup.mount
+Requires=mnt-nos.mount mnt-backup.mount
+RequiresMountsFor=/mnt/nos /mnt/backup
 
 [Service]
 Type=forking
