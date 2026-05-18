@@ -14,11 +14,13 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 ```
-
+## add this in here 👆️👇️
+```bash
+sudo nvim /etc/systemd/system/qbittorrent-nox.service
+```
 **Enable and start the service**:
     
 ```bash
-sudo nvim /etc/systemd/system/qbittorrent-nox.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now qbittorrent-nox
 ```
@@ -28,7 +30,7 @@ You can now check if it's running correctly using the alias you likely have or b
 ```bash
 systemctl status qbittorrent-nox
 ```
-## restart
+### restart
 ```bash
 sudo systemctl restart qbittorrent-nox
 ```
