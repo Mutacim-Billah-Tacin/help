@@ -14,7 +14,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 ```
-## add this in here 👆️👇️
+### add this in here 👆️👇️
 ```bash
 sudo nvim /etc/systemd/system/qbittorrent-nox.service
 ```
