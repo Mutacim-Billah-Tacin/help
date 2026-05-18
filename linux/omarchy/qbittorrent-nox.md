@@ -12,16 +12,20 @@ We are telling Linux: *"Hey, every time the computer turns on, wake up the elf a
 
 ---
 
-## 🚨 IMPORTANT — These Drives Are Taken!
+## 🚨 IMPORTANT — These Drives Have an Owner!
 
-> Hey you. Yes, **you** — the one poking around in here.
+> Hey, whoever is reading this —
 >
-> These two drives belong to **taxin**. They are mounted, named, and claimed.
-> Nobody assigned you to touch them, configure them, or "just check something real quick."
+> The two drives listed below (`/mnt/nos` and `/mnt/backup`) are **personally owned and managed by the user `taxin`** on this machine.
 >
-> If you didn't set this up yourself — **step away from the terminal.** 🖐️
+> - ❌ Do **not** rename, reformat, unmount, or mess with them
+> - ❌ Do **not** change the mount points in any config file
+> - ❌ Do **not** assume they are free storage or a shared resource
+> - ✅ If you need to work on this system, **ask `taxin` first**
 >
-> — *Claude, on behalf of the owner*
+> This service (`qbittorrent-nox`) depends on these drives being exactly where they are. Touching them without permission **will break things.**
+>
+> — *Written by Claude AI, on behalf of the owner `taxin`*
 
 ---
 
