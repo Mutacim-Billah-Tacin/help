@@ -15,10 +15,10 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 ### add this in here 👆️👇️
+as you can see in the below command that the `sudo` is for permission, the `nvim` is an editor and the next part is path of the file
 ```bash
 sudo nvim /etc/systemd/system/qbittorrent-nox.service
 ```
-you can see in the above command that the `sudo` is for permission, the `nvim` is an editor and the next part is path of the file
 
 **Enable and start the service**:
     
