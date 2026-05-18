@@ -1,63 +1,105 @@
-# 🧲 qBittorrent-nox Service Setup
+# qBittorrent-nox Systemd Service
 
-> **Explain like I'm 5:** Imagine your computer is a toy robot 🤖. We want this robot to **automatically start downloading stuff** every time it wakes up — without you having to press any buttons. This guide teaches the robot to do that!
+![Platform](https://img.shields.io/badge/platform-Linux-blue?logo=linux)
+![Init System](https://img.shields.io/badge/init-systemd-orange)
+![Service](https://img.shields.io/badge/service-qBittorrent--nox-green?logo=qbittorrent)
+![WebUI Port](https://img.shields.io/badge/WebUI-port%208080-lightgrey)
 
----
-
-## 🧸 What Is This?
-
-`qBittorrent-nox` is a download helper that runs **silently in the background** (no window, no buttons). Think of it like a little elf 🧝 living inside your computer, quietly downloading things for you.
-
-We are telling Linux: *"Hey, every time the computer turns on, wake up the elf automatically!"*
+A systemd service configuration to run `qbittorrent-nox` (headless qBittorrent) automatically on boot, with dependency on two specific mount points.
 
 ---
 
-## 🚨 IMPORTANT — These Drives Have an Owner!
+## ⚠️ Drive Ownership Notice
 
-> Hey, whoever is reading this —
+> **This repository is maintained by [`taxin`](https://github.com/taxin).**
 >
-> The two drives listed below (`/mnt/nos` and `/mnt/backup`) are **personally owned and managed by the user `taxin`** on this machine.
+> The drives mounted at `/mnt/nos` and `/mnt/backup` are **privately owned** by the repository owner. If you are cloning or adapting this config for your own system:
 >
-> - ❌ Do **not** rename, reformat, unmount, or mess with them
-> - ❌ Do **not** change the mount points in any config file
-> - ❌ Do **not** assume they are free storage or a shared resource
-> - ✅ If you need to work on this system, **ask `taxin` first**
+> - Replace the mount paths with your own
+> - Replace `User=taxin` with your own Linux username
+> - Do **not** assume these paths exist on any other machine
 >
-> This service (`qbittorrent-nox`) depends on these drives being exactly where they are. Touching them without permission **will break things.**
->
-> — *Written by Claude AI, on behalf of the owner `taxin`*
+> These drives are required dependencies of this service. The service **will not start** without them.
 
 ---
 
-## 📋 Before You Start
+## Table of Contents
 
-Make sure these two "rooms" (drives/folders) are available when the computer boots:
-
-| Room | Path |
-|------|------|
-| 🗂️ NOS Drive | `/mnt/nos` |
-| 💾 Backup Drive | `/mnt/backup` |
-
-> The elf **refuses to wake up** if these rooms are locked or missing!
+- [Overview](#overview)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Service Configuration](#service-configuration)
+- [Managing the Service](#managing-the-service)
+- [WebUI Access](#webui-access)
 
 ---
 
-## 🪜 Step 1 — Write the Elf's "Job Description"
+## Overview
 
-Think of this file as a note that tells Linux:
-*"Here's the elf's name, what it does, and how to start it."*
+`qbittorrent-nox` is the headless (no GUI) version of qBittorrent. This setup runs it as a systemd service so it:
 
-Open the file with this command:
+- Starts **automatically on boot**
+- Waits for the **network and required drives** to be ready before starting
+- Restarts **automatically on failure**
+- Is accessible via a **browser-based WebUI** at `http://localhost:8080`
+
+---
+
+## Requirements
+
+| Requirement | Details |
+|---|---|
+| OS | Any Linux distro with `systemd` |
+| Package | `qbittorrent-nox` installed |
+| User | A non-root user (here: `taxin`) |
+| Mounts | `/mnt/nos` and `/mnt/backup` must be configured in `/etc/fstab` |
+
+Install qBittorrent-nox if not already installed:
+
+```bash
+# Arch / Omarchy
+sudo pacman -S qbittorrent-nox
+
+# Ubuntu / Debian
+sudo apt install qbittorrent-nox
+```
+
+---
+
+## Installation
+
+### 1. Create the service file
 
 ```bash
 sudo nvim /etc/systemd/system/qbittorrent-nox.service
 ```
 
-> 🔑 `sudo` = "I'm the boss, do what I say"
-> 📝 `nvim` = the notebook/editor we use to write
-> 📂 The long path = where we put the note
+Paste the contents from [Service Configuration](#service-configuration) below, then save and exit with `:wq`.
 
-Now **paste this inside** the file:
+### 2. Reload systemd and enable the service
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now qbittorrent-nox
+```
+
+### 3. Verify it is running
+
+```bash
+systemctl status qbittorrent-nox
+```
+
+Expected output:
+
+```
+● qbittorrent-nox.service - qBittorrent-nox service
+     Loaded: loaded (/etc/systemd/system/qbittorrent-nox.service; enabled)
+     Active: active (running)
+```
+
+---
+
+## Service Configuration
 
 ```ini
 [Unit]
@@ -76,97 +118,47 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 
-### 🧩 What does each part mean?
+### Field Reference
 
-| Part | Plain English |
-|------|---------------|
-| `After=` | "Wake up AFTER the internet and drives are ready" |
-| `Requires=` | "I NEED these drives. Don't start without them!" |
-| `User=taxin` | "Run as the user named `taxin`, not as the big boss (root)" |
-| `ExecStart=` | "This is the magic spell to wake up the elf" |
-| `--webui-port=8080` | "Open a tiny website on port 8080 so I can control it" |
-| `Restart=on-failure` | "If the elf trips and falls, wake it back up!" |
-
-Save and exit nvim by typing `:wq` then pressing `Enter`.
+| Field | Purpose |
+|---|---|
+| `After=` | Ensures service starts only after network and both drives are ready |
+| `Requires=` | Declares hard dependency on both mount units — service fails without them |
+| `RequiresMountsFor=` | Additional path-based mount check |
+| `User=` | Runs the process as `taxin` instead of root |
+| `ExecStart=` | The command used to launch qBittorrent-nox in daemon mode |
+| `Restart=on-failure` | Automatically restarts the service if it crashes |
 
 ---
 
-## 🪜 Step 2 — Tell Linux About the New Note
+## Managing the Service
 
-Linux doesn't automatically read new notes. You have to say *"Hey, go re-read everything!"*:
-
-```bash
-sudo systemctl daemon-reload
-```
-
-Then tell it to **start the elf now AND every time the computer boots**:
-
-```bash
-sudo systemctl enable --now qbittorrent-nox
-```
-
-> `enable` = "Always wake the elf when the computer starts" 
-> `--now` = "Also wake it up RIGHT NOW, don't wait"
+| Action | Command |
+|---|---|
+| Start | `sudo systemctl start qbittorrent-nox` |
+| Stop | `sudo systemctl stop qbittorrent-nox` |
+| Restart | `sudo systemctl restart qbittorrent-nox` |
+| Check status | `systemctl status qbittorrent-nox` |
+| View live logs | `journalctl -u qbittorrent-nox -f` |
+| Disable auto-start | `sudo systemctl disable qbittorrent-nox` |
 
 ---
 
-## 🪜 Step 3 — Check If the Elf Is Awake
+## WebUI Access
 
-```bash
-systemctl status qbittorrent-nox
-```
-
-You want to see something like:
-
-```
-● qbittorrent-nox.service - qBittorrent-nox service
-     Active: active (running) ✅
-```
-
-If it says `active (running)` — **the elf is awake and working!** 🎉
-
----
-
-## 🔄 How to Restart the Elf
-
-If something feels wrong or you made changes, give the elf a little shake:
-
-```bash
-sudo systemctl restart qbittorrent-nox
-```
-
----
-
-## 🌐 Access the Control Panel
-
-Once it's running, open your browser and go to:
+Once the service is running, open your browser and navigate to:
 
 ```
 http://localhost:8080
 ```
 
-You'll see a website to control your downloads!
-
-| Field | Default Value |
-|-------|---------------|
+| Field | Default |
+|---|---|
 | Username | `admin` |
 | Password | `adminadmin` |
 
-> ⚠️ **Change the password immediately!** Go to **Settings → WebUI → Password**. Leaving it as default is like leaving your front door wide open! 🚪
+> **Security:** Change the default password immediately after first login via **Settings → WebUI → Password**.
 
 ---
 
-## 🆘 Quick Cheat Sheet
-
-| What you want to do | Command |
-|---------------------|---------|
-| Start the service | `sudo systemctl start qbittorrent-nox` |
-| Stop the service | `sudo systemctl stop qbittorrent-nox` |
-| Restart the service | `sudo systemctl restart qbittorrent-nox` |
-| Check if it's running | `systemctl status qbittorrent-nox` |
-| See live logs | `journalctl -u qbittorrent-nox -f` |
-| Disable auto-start | `sudo systemctl disable qbittorrent-nox` |
-
----
-
-*Made with ❤️ for humans, not robots.*
+*README written with the assistance of [Claude](https://claude.ai) by Anthropic.*
