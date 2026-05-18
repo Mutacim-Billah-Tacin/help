@@ -30,5 +30,5 @@ systemctl status qbittorrent-nox
 ```
 ## restart
 ```bash
-systemctl restart qbittorrent-nox
+sudo systemctl restart qbittorrent-nox
 ```
