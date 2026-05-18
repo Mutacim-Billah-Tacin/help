@@ -11,7 +11,7 @@ A systemd service configuration to run `qbittorrent-nox` (headless qBittorrent) 
 
 ## ⚠️ Drive Ownership Notice
 
-> **This repository is maintained by [`taxin`](https://github.com/taxin).**
+> **This repository is maintained by [`taxin`](https://github.com/taxin-404).**
 >
 > The drives mounted at `/mnt/nos` and `/mnt/backup` are **privately owned** by the repository owner. If you are cloning or adapting this config for your own system:
 >
